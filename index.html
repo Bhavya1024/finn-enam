@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#111315">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<title>FINN — Research Desk</title>
+<style>
+  :root{
+    --bg:#111315; --surface:#16191C; --surface-2:#1C2024; --line:#262B30; --line-2:#323940;
+    --text:#E4E6E8; --muted:#9BA2A9; --faint:#6E767E;
+    --accent:#6FA894; --accent-ink:#0F1A16; --accent-soft:rgba(111,168,148,.12);
+    --pos:#5DAE8B; --neg:#D16A5F; --warn:#CDA44E;
+    --pos-soft:rgba(93,174,139,.12); --neg-soft:rgba(209,106,95,.12); --warn-soft:rgba(205,164,78,.13);
+    --r:6px; --r-sm:4px;
+    --font:"Inter","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:"SF Mono","JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+    color-scheme:dark;
+  }
+  [data-theme=light]{
+    --bg:#F6F4EF; --surface:#FFFFFF; --surface-2:#F0EDE6; --line:#E2DED5; --line-2:#D2CDC2;
+    --text:#1A1D20; --muted:#565D64; --faint:#878D93;
+    --accent:#1F6A56; --accent-ink:#FFFFFF; --accent-soft:rgba(31,106,86,.09);
+    --pos:#1E7A58; --neg:#AE3A30; --warn:#946711;
+    --pos-soft:rgba(30,122,88,.09); --neg-soft:rgba(174,58,48,.08); --warn-soft:rgba(148,103,17,.1);
+    color-scheme:light;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit}
+  a{color:var(--accent)}
+  .num,td,.tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ---------- layout: mobile column, desktop rail ---------- */
+  #app{min-height:100vh;display:flex;flex-direction:column}
+  #rail{display:none}
+  #col{flex:1;display:flex;flex-direction:column;min-width:0}
+  header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 16px 10px}
+  main{flex:1;padding:14px 16px 96px;width:100%;max-width:1120px;margin:0 auto}
+  nav#tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(8px + env(safe-area-inset-bottom))}
+  .tab{flex:1;background:none;border:0;color:var(--faint);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;font-weight:600;padding:4px 0;cursor:pointer;position:relative;transition:color .15s}
+  .tab svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7}
+  .tab.on{color:var(--text)}
+  .tab .bdg{position:absolute;top:0;left:calc(50% + 6px);background:var(--neg);color:#fff;font-size:9.5px;font-weight:700;min-width:16px;height:16px;border-radius:8px;padding:0 4px;display:flex;align-items:center;justify-content:center}
+
+  @media (min-width:900px){
+    #app{flex-direction:row}
+    #rail{display:flex;flex-direction:column;width:224px;flex:none;position:sticky;top:0;height:100vh;border-right:1px solid var(--line);background:var(--surface);padding:18px 12px}
+    nav#tabs{display:none}
+    header{padding:18px 32px 14px}
+    main{padding:22px 32px 48px}
+    .brandrow{display:none !important}
+  }
+  .brand{display:flex;align-items:baseline;gap:8px;padding:0 8px 18px}
+  .brand b{font-size:18px;letter-spacing:.5px}
+  .brand span{font-size:11px;color:var(--faint)}
+  .rnav{display:flex;flex-direction:column;gap:2px}
+  .rnav button{display:flex;align-items:center;gap:10px;background:none;border:0;padding:8px 10px;border-radius:var(--r-sm);color:var(--muted);font-size:13.5px;font-weight:550;cursor:pointer;text-align:left}
+  .rnav button svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7}
+  .rnav button:hover{background:var(--surface-2);color:var(--text)}
+  .rnav button.on{background:var(--surface-2);color:var(--text)}
+  .rnav .cnt{margin-left:auto;font-size:11px;color:var(--neg);font-weight:700}
+  .railfoot{margin-top:auto;padding:12px 8px 0;border-top:1px solid var(--line);font-size:11.5px;color:var(--faint)}
+
+  .brandrow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .brandrow b{font-size:16px;letter-spacing:.5px}
+  .hdr-r{margin-left:auto;display:flex;gap:6px;align-items:center}
+  .vt{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .vt h1{font-size:21px;line-height:1.25;margin:0;font-weight:680;letter-spacing:-.2px}
+  .vt .sub{font-size:12.5px;color:var(--muted)}
+
+  /* ---------- primitives ---------- */
+  .btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:var(--r);padding:9px 14px;font-size:13px;font-weight:620;cursor:pointer;transition:opacity .15s}
+  .btn:hover{opacity:.9}
+  .btn.q{background:transparent;color:var(--text);border:1px solid var(--line-2)}
+  .btn.q:hover{background:var(--surface-2)}
+  .btn.sm{padding:5px 10px;font-size:12px}
+  .ib{background:transparent;border:1px solid var(--line-2);border-radius:var(--r-sm);height:28px;min-width:28px;padding:0 8px;font-size:12px;color:var(--muted);cursor:pointer}
+  .seg{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--r);overflow:hidden}
+  .seg button{background:none;border:0;border-right:1px solid var(--line-2);padding:6px 12px;font-size:12.5px;font-weight:560;color:var(--muted);cursor:pointer;white-space:nowrap}
+  .seg button:last-child{border-right:0}
+  .seg button.on{background:var(--surface-2);color:var(--text)}
+  .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 14px}
+  .sp{flex:1}
+  .h2{display:flex;align-items:baseline;gap:10px;margin:24px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .h2 h2{font-size:13px;font-weight:650;margin:0;letter-spacing:.1px}
+  .h2 .m{font-size:12px;color:var(--faint);margin-left:auto}
+  .h2:first-child{margin-top:4px}
+  .muted{color:var(--muted)} .faint{color:var(--faint)} .small{font-size:12px} .xs{font-size:11px}
+  .pos{color:var(--pos)} .neg{color:var(--neg)} .warn{color:var(--warn)}
+  .tag{display:inline-block;font-size:10.5px;font-weight:620;letter-spacing:.2px;padding:1px 6px;border-radius:3px;border:1px solid var(--line-2);color:var(--muted);white-space:nowrap}
+  .tag.pos{border-color:transparent;background:var(--pos-soft);color:var(--pos)}
+  .tag.neg{border-color:transparent;background:var(--neg-soft);color:var(--neg)}
+  .tag.warn{border-color:transparent;background:var(--warn-soft);color:var(--warn)}
+  .tag.acc{border-color:transparent;background:var(--accent-soft);color:var(--accent)}
+  .note{font-size:12px;color:var(--muted);line-height:1.55;border-left:2px solid var(--line-2);padding:2px 0 2px 10px;margin:10px 0}
+  .empty{padding:36px 8px;text-align:center;color:var(--muted);font-size:13.5px}
+  .foot{font-size:11.5px;color:var(--faint);margin-top:24px;line-height:1.6}
+  .src{font-size:11px;color:var(--faint);margin-top:3px}
+  .src b{font-weight:600;color:var(--muted)}
+  .grid2{display:grid;gap:24px}
+  @media (min-width:1100px){.grid2{grid-template-columns:minmax(0,1fr) 320px}}
+
+  /* status pill */
+  .status{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);border:1px solid var(--line-2);border-radius:var(--r-sm);padding:3px 8px;cursor:pointer;background:none}
+  .status i{width:7px;height:7px;border-radius:50%;background:var(--faint)}
+  .status.live i{background:var(--pos)} .status.partial i,.status.stale i{background:var(--warn)} .status.failed i{background:var(--neg)}
+
+  /* ---------- Today ---------- */
+  .brief{border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:14px 16px;margin-bottom:16px}
+  .brief .d{font-size:11.5px;color:var(--faint);margin-bottom:4px}
+  .brief p{margin:0;font-size:14.5px;line-height:1.55}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
+  .stats>div{padding-right:8px}
+  .stats .n{font-size:20px;font-weight:650;letter-spacing:-.3px}
+  .stats .l{font-size:11.5px;color:var(--muted)}
+  .item{border-bottom:1px solid var(--line);padding:12px 2px;cursor:pointer;position:relative}
+  .item:hover{background:linear-gradient(var(--surface-2),var(--surface-2)) padding-box}
+  .item.hi{box-shadow:inset 2px 0 0 var(--neg);padding-left:12px}
+  .item .r1{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .tk{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.2px}
+  .item .nm{font-size:13px;color:var(--muted)}
+  .item .t{margin-left:auto;font-size:11.5px;color:var(--faint);white-space:nowrap}
+  .item .s{font-size:14px;margin-top:4px;line-height:1.5}
+  .item .why{font-size:11.5px;color:var(--faint);margin-top:4px}
+  .item .det{display:none;margin-top:10px;font-size:13px;color:var(--muted);line-height:1.6}
+  .item.open .det{display:block}
+  .new{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.4px}
+  .mat{display:grid;grid-template-columns:1fr auto;gap:2px 16px;font-size:12px;margin:8px 0;max-width:420px}
+  .mat .tot{border-top:1px solid var(--line);padding-top:3px;font-weight:650;color:var(--text)}
+  table.t{width:100%;border-collapse:collapse;font-size:12.5px}
+  table.t th{font-weight:600;color:var(--faint);font-size:11px;text-align:right;padding:6px 8px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+  table.t td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  table.t th:first-child,table.t td:first-child{text-align:left;padding-left:0}
+  .tblwrap{overflow-x:auto;margin-top:8px}
+  .person{border:1px solid var(--line);border-radius:var(--r);padding:12px;margin-top:10px}
+  .person b{color:var(--text)}
+
+  /* ---------- Alerts ---------- */
+  .panel{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:14px 16px;margin-bottom:8px}
+  .ctl{margin:12px 0 16px}
+  .ctl .lab{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+  .ctl output{font-weight:650;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .cats{display:flex;flex-wrap:wrap;gap:6px}
+  .cat{background:none;border:1px solid var(--line-2);border-radius:var(--r-sm);padding:4px 9px;font-size:12px;color:var(--muted);cursor:pointer}
+  .cat.on{border-color:var(--accent);color:var(--text);background:var(--accent-soft)}
+  .al{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
+  .al.read{opacity:.6}
+  .al .b{flex:1;min-width:0}
+  .al .ti{font-size:13.5px;font-weight:600}
+  .al .wy{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .al .v{font-size:14px;font-weight:650;text-align:right;min-width:64px}
+  .al .acts{display:flex;gap:4px;margin-top:6px}
+
+  /* ---------- Portfolio ---------- */
+  .heat{display:flex;flex-wrap:wrap;gap:2px;margin:8px 0 4px}
+  .tile{height:58px;padding:6px 7px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;border-radius:2px;color:var(--text);min-width:58px}
+  .tile b{font-family:var(--mono);font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tile span{font-size:12px;font-variant-numeric:tabular-nums}
+  .sec{display:grid;grid-template-columns:120px 1fr 60px;align-items:center;gap:10px;font-size:12.5px;padding:3px 0}
+  .sec .tr{height:6px;background:var(--surface-2);position:relative}
+  .sec .tr i{position:absolute;top:0;bottom:0}
+  .sec .tr u{position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--line-2)}
+  table.h{width:100%;border-collapse:collapse;font-size:13px}
+  table.h th{font-size:11px;font-weight:600;color:var(--faint);text-align:right;padding:8px;border-bottom:1px solid var(--line-2);cursor:pointer;user-select:none;white-space:nowrap}
+  table.h th.l,table.h td.l{text-align:left}
+  table.h th:first-child,table.h td:first-child{padding-left:0}
+  table.h td{padding:9px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  table.h tr{cursor:pointer} table.h tbody tr:hover td{background:var(--surface-2)}
+  table.h .nm{font-size:12px;color:var(--muted);display:block;max-width:180px;overflow:hidden;text-overflow:ellipsis}
+  @media (max-width:640px){ table.h .hm{display:none} }
+
+  /* ---------- Stock ---------- */
+  .px{font-size:30px;font-weight:650;letter-spacing:-.6px}
+  .chart{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:8px 8px 4px;margin:10px 0}
+  .chart svg{display:block;touch-action:pan-y}
+  .kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+  .kv>div{padding:10px 12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 -1px -1px 0}
+  .kv .k{font-size:11.5px;color:var(--muted)} .kv .v{font-size:16px;font-weight:620;margin-top:1px}
+
+  /* ---------- Research ---------- */
+  .search{display:flex;align-items:center;gap:8px;border:1px solid var(--line-2);border-radius:var(--r);padding:9px 12px;background:var(--surface);max-width:560px}
+  .search input{flex:1;background:none;border:0;outline:0;color:var(--text);font-size:15px}
+  .search svg{width:16px;height:16px;stroke:var(--faint);fill:none;stroke-width:2}
+  .unis{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .uni{background:none;border:1px solid var(--line-2);border-radius:var(--r-sm);padding:5px 9px;font-size:12px;cursor:pointer;color:var(--muted)}
+  .uni b{font-family:var(--mono);color:var(--text);font-weight:600;margin-right:4px}
+  .rhead{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;margin:6px 0 12px}
+  .rhead h2{margin:0;font-size:22px;font-weight:680;letter-spacing:-.3px}
+  .cov{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px 0;margin-bottom:14px}
+  .cov b{color:var(--text);font-weight:620}
+  .mods{display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:16px;scrollbar-width:none}
+  .mods::-webkit-scrollbar{display:none}
+  .mods button{background:none;border:0;border-bottom:2px solid transparent;padding:8px 10px;font-size:13px;font-weight:560;color:var(--muted);cursor:pointer;white-space:nowrap}
+  .mods button.on{color:var(--text);border-bottom-color:var(--accent)}
+  .lsum{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);margin-bottom:6px}
+  @media (min-width:700px){.lsum{grid-template-columns:repeat(6,1fr)}}
+  .lsum>div{padding:10px 12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 -1px -1px 0}
+  .lsum .n{font-size:20px;font-weight:650}
+  .lsum .l{font-size:11.5px;color:var(--muted)}
+  .lq{font-size:12px;color:var(--faint);font-weight:600;margin:20px 0 4px;letter-spacing:.2px}
+  .le{display:grid;grid-template-columns:1fr;gap:6px 18px;padding:12px 0;border-bottom:1px solid var(--line)}
+  @media (min-width:800px){.le{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}}
+  .le .what{font-size:14px;font-weight:600}
+  .le .what .h{font-weight:400;color:var(--muted)}
+  .le blockquote{margin:6px 0 4px;padding-left:10px;border-left:2px solid var(--line-2);font-size:13px;color:var(--muted);font-style:italic}
+  .le .ev{font-size:13px}
+  .le .ev .rs{color:var(--muted);font-size:12.5px;margin-top:4px;line-height:1.5}
+  .prog{height:4px;background:var(--surface-2);margin-top:8px;position:relative;max-width:280px}
+  .prog i{position:absolute;left:0;top:0;bottom:0;background:var(--accent)}
+  .prog u{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--text)}
+  .metric{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+  .metric>div{padding:12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 -1px -1px 0}
+  .metric .k{font-size:12px;color:var(--muted)} .metric .v{font-size:19px;font-weight:650;margin:2px 0}
+  .metric .sb{font-size:12px;color:var(--muted)}
+  .pt{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .pt .k{font-weight:600} .pt .k span{display:block;font-size:15px;margin-top:2px}
+  .segr{display:grid;grid-template-columns:minmax(120px,200px) 1fr 44px;gap:10px;align-items:center;font-size:13px;padding:5px 0}
+  .segr .tr{height:6px;background:var(--surface-2)} .segr .tr i{display:block;height:100%;background:var(--accent)}
+  .bb{display:grid;gap:20px} @media (min-width:800px){.bb{grid-template-columns:1fr 1fr}}
+  .bb ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.6} .bb li{margin-bottom:6px}
+  .spin{display:inline-block;width:16px;height:16px;border:2px solid var(--line-2);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .fade{animation:fd .16s ease-out} @keyframes fd{from{opacity:.4}to{opacity:1}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  .toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 14px;border-radius:var(--r);font-size:12.5px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:90vw}
+  .toast.show{opacity:1}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+  .row:last-child{border-bottom:0}
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="rail"></aside>
+  <div id="col">
+    <header id="hdr"></header>
+    <main id="main"></main>
+  </div>
+  <nav id="tabs"></nav>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ============ DATA (injected at build) ============ */
+let DATA = /*__FINN_DATA__*/{"meta": {"generated_at": "2026-11-02T08:30:00+05:30", "data_note": "Illustrative SAMPLE data. Figures are plausible and internally consistent but are not company data and have not been verified. Fiscal quarters follow India's April–March year (Jul–Sep 2026 = Q2 FY27). The live engine (/backend) fetches EOD prices (Yahoo Finance), NSE filings, Screener.in tables and company PDFs.", "base_currency": "INR", "amounts_in": "₹ crore unless stated", "fy_labels_fixed": true, "sources": {"prices": {"state": "sample", "as_of": "2026-11-02T08:30:00+05:30", "detail": "Shipped sample snapshot"}, "announcements": {"state": "sample", "as_of": "2026-11-02T08:30:00+05:30", "detail": "Shipped sample snapshot"}}}, "portfolio": [{"ticker": "RELIANCE", "name": "Reliance Industries", "sector": "Energy / Conglomerate", "size": "Large", "mcap_cr": 1890000, "price": 1398.4, "prev_close": 1381.2, "chg_pct": 1.25, "volume": 9820000, "avg_vol_20d": 8100000, "vol_ratio": 1.21, "spark": [1352, 1360, 1358, 1371, 1369, 1377, 1381, 1398]}, {"ticker": "HDFCBANK", "name": "HDFC Bank", "sector": "Banking", "size": "Large", "mcap_cr": 1420000, "price": 1862.0, "prev_close": 1871.5, "chg_pct": -0.51, "volume": 12400000, "avg_vol_20d": 11800000, "vol_ratio": 1.05, "spark": [1840, 1852, 1860, 1866, 1875, 1870, 1871, 1862]}, {"ticker": "TCS", "name": "Tata Consultancy Services", "sector": "IT Services", "size": "Large", "mcap_cr": 1120000, "price": 3098.5, "prev_close": 3075.0, "chg_pct": 0.76, "volume": 2600000, "avg_vol_20d": 2400000, "vol_ratio": 1.08, "spark": [3010, 3040, 3055, 3042, 3060, 3071, 3075, 3098]}, {"ticker": "INFY", "name": "Infosys", "sector": "IT Services", "size": "Large", "mcap_cr": 640000, "price": 1545.0, "prev_close": 1540.2, "chg_pct": 0.31, "volume": 5100000, "avg_vol_20d": 5600000, "vol_ratio": 0.91, "spark": [1512, 1520, 1531, 1528, 1539, 1544, 1540, 1545]}, {"ticker": "ITC", "name": "ITC", "sector": "FMCG", "size": "Large", "mcap_cr": 560000, "price": 448.3, "prev_close": 447.1, "chg_pct": 0.27, "volume": 9900000, "avg_vol_20d": 10200000, "vol_ratio": 0.97, "spark": [441, 443, 445, 444, 446, 447, 447, 448]}, {"ticker": "LT", "name": "Larsen & Toubro", "sector": "Infra / Engineering", "size": "Large", "mcap_cr": 510000, "price": 3712.0, "prev_close": 3650.4, "chg_pct": 1.69, "volume": 3400000, "avg_vol_20d": 2100000, "vol_ratio": 1.62, "spark": [3560, 3588, 3601, 3620, 3640, 3655, 3650, 3712]}, {"ticker": "TATAMOTORS", "name": "Tata Motors", "sector": "Automobiles", "size": "Large", "mcap_cr": 268000, "price": 728.5, "prev_close": 741.0, "chg_pct": -1.69, "volume": 21500000, "avg_vol_20d": 14200000, "vol_ratio": 1.51, "spark": [760, 755, 749, 746, 744, 740, 741, 728]}, {"ticker": "SUNPHARMA", "name": "Sun Pharmaceutical", "sector": "Pharma", "size": "Large", "mcap_cr": 405000, "price": 1688.0, "prev_close": 1679.3, "chg_pct": 0.52, "volume": 2100000, "avg_vol_20d": 2050000, "vol_ratio": 1.02, "spark": [1650, 1662, 1670, 1668, 1675, 1680, 1679, 1688]}, {"ticker": "ASIANPAINT", "name": "Asian Paints", "sector": "Consumer / Paints", "size": "Large", "mcap_cr": 225000, "price": 2345.0, "prev_close": 2402.6, "chg_pct": -2.4, "volume": 4800000, "avg_vol_20d": 2300000, "vol_ratio": 2.09, "spark": [2460, 2448, 2431, 2420, 2411, 2405, 2402, 2345]}, {"ticker": "BAJFINANCE", "name": "Bajaj Finance", "sector": "NBFC", "size": "Large", "mcap_cr": 560000, "price": 905.0, "prev_close": 898.2, "chg_pct": 0.76, "volume": 15600000, "avg_vol_20d": 16100000, "vol_ratio": 0.97, "spark": [878, 885, 890, 888, 894, 899, 898, 905]}, {"ticker": "ADANIPORTS", "name": "Adani Ports & SEZ", "sector": "Infra / Ports", "size": "Large", "mcap_cr": 305000, "price": 1412.0, "prev_close": 1388.5, "chg_pct": 1.69, "volume": 6700000, "avg_vol_20d": 5900000, "vol_ratio": 1.14, "spark": [1360, 1372, 1381, 1379, 1385, 1390, 1388, 1412]}, {"ticker": "TITAN", "name": "Titan Company", "sector": "Consumer / Jewellery", "size": "Large", "mcap_cr": 295000, "price": 3325.0, "prev_close": 3300.1, "chg_pct": 0.75, "volume": 1800000, "avg_vol_20d": 1750000, "vol_ratio": 1.03, "spark": [3250, 3268, 3281, 3279, 3290, 3301, 3300, 3325]}, {"ticker": "TATASTEEL", "name": "Tata Steel", "sector": "Metals", "size": "Large", "mcap_cr": 205000, "price": 164.2, "prev_close": 161.8, "chg_pct": 1.48, "volume": 42000000, "avg_vol_20d": 38000000, "vol_ratio": 1.11, "spark": [157, 159, 160, 159, 161, 162, 161, 164]}, {"ticker": "POWERGRID", "name": "Power Grid Corp", "sector": "Utilities", "size": "Large", "mcap_cr": 280000, "price": 301.5, "prev_close": 299.8, "chg_pct": 0.57, "volume": 8900000, "avg_vol_20d": 9100000, "vol_ratio": 0.98, "spark": [294, 296, 298, 297, 299, 300, 299, 301]}, {"ticker": "DMART", "name": "Avenue Supermarts", "sector": "Retail", "size": "Mid", "mcap_cr": 265000, "price": 4075.0, "prev_close": 4120.9, "chg_pct": -1.11, "volume": 1200000, "avg_vol_20d": 900000, "vol_ratio": 1.33, "spark": [4180, 4160, 4142, 4138, 4130, 4125, 4120, 4075]}, {"ticker": "DIXON", "name": "Dixon Technologies", "sector": "EMS / Electronics", "size": "Mid", "mcap_cr": 92000, "price": 15320.0, "prev_close": 14210.0, "chg_pct": 7.81, "volume": 2400000, "avg_vol_20d": 780000, "vol_ratio": 3.08, "spark": [13200, 13450, 13600, 13720, 13900, 14050, 14210, 15320]}, {"ticker": "POLYCAB", "name": "Polycab India", "sector": "Cables / Wires", "size": "Mid", "mcap_cr": 104000, "price": 6910.0, "prev_close": 6855.0, "chg_pct": 0.8, "volume": 850000, "avg_vol_20d": 820000, "vol_ratio": 1.04, "spark": [6720, 6760, 6800, 6790, 6830, 6860, 6855, 6910]}, {"ticker": "VBL", "name": "Varun Beverages", "sector": "FMCG / Beverages", "size": "Mid", "mcap_cr": 172000, "price": 508.0, "prev_close": 502.5, "chg_pct": 1.09, "volume": 9200000, "avg_vol_20d": 9500000, "vol_ratio": 0.97, "spark": [492, 496, 500, 499, 503, 504, 502, 508]}], "adhoc_universe": [{"ticker": "KPITTECH", "name": "KPIT Technologies", "sector": "Auto-tech / IT"}, {"ticker": "JUBLFOOD", "name": "Jubilant FoodWorks", "sector": "QSR / Food"}, {"ticker": "IEX", "name": "Indian Energy Exchange", "sector": "Exchanges"}, {"ticker": "CDSL", "name": "Central Depository Services", "sector": "Market Infra"}], "default_thresholds": {"vol_ratio": 2.0, "price_move_pct": 4.0, "watched_categories": ["results", "M&A", "management_change", "fund_raise", "credit_rating", "litigation"]}, "announcements": [{"id": "a01", "ticker": "DIXON", "name": "Dixon Technologies", "category": "results", "priority": "high", "time": "2026-11-02T07:55:00+05:30", "title": "Q2 FY27 Results — Board approves financial results for quarter ended Sep 2026", "summary": "Revenue +38% YoY, +12% QoQ; PAT +61% YoY on display-module ramp. Margins expanding.", "results": {"quarters": ["Q2 FY26", "Q1 FY27", "Q2 FY27"], "rows": [{"metric": "Revenue", "values": [9340, 12760, 14290]}, {"metric": "EBITDA", "values": [378, 540, 632]}, {"metric": "PBT", "values": [286, 402, 489]}, {"metric": "PAT", "values": [212, 289, 341]}], "ebitda_margin": [4.05, 4.23, 4.42], "source": {"kind": "sample", "label": "Illustrative sample data", "would_be": "Screener.in quarterly table, reconciled to the results filing"}, "reconciliation": {"status": "unverified", "reason": "sample data — no filing to reconcile against"}, "basis": "operating"}, "detail": "Mobile & EMS division drove the beat; new display fab contributed a partial quarter. Management flagged on the filing that Q3 will see full-quarter display contribution. EBITDA margin expanded ~37bps QoQ to 4.42%."}, {"id": "a02", "ticker": "ASIANPAINT", "name": "Asian Paints", "category": "results", "priority": "high", "time": "2026-11-01T18:40:00+05:30", "title": "Q2 FY27 Results — Standalone & Consolidated", "summary": "Revenue -3% YoY, volumes flat; PAT -14% YoY as discounting hits margins. Weakest print in 8 quarters.", "results": {"quarters": ["Q2 FY26", "Q1 FY27", "Q2 FY27"], "rows": [{"metric": "Revenue", "values": [8460, 8990, 8205]}, {"metric": "EBITDA", "values": [1590, 1520, 1310]}, {"metric": "PBT", "values": [1380, 1300, 1095]}, {"metric": "PAT", "values": [1020, 965, 878]}], "ebitda_margin": [18.79, 16.91, 15.97], "source": {"kind": "sample", "label": "Illustrative sample data", "would_be": "Screener.in quarterly table, reconciled to the results filing"}, "reconciliation": {"status": "unverified", "reason": "sample data — no filing to reconcile against"}, "basis": "operating"}, "detail": "Gross margin compressed on aggressive competitive discounting following new entrants in decorative paints. The -2.4% price reaction (today) reflects the margin miss more than the revenue line."}, {"id": "a03", "ticker": "LT", "name": "Larsen & Toubro", "category": "M&A", "priority": "high", "time": "2026-11-02T09:10:00+05:30", "title": "L&T to acquire 51% stake in green-hydrogen electrolyser maker for ₹2,400 cr", "summary": "Bolt-on into energy transition; funded from internal accruals. Signals capex intent in new-energy.", "detail": "The target makes alkaline + PEM electrolysers. Deal pegs EV/sales ~3.1x. L&T says it is EPS-neutral in year one, accretive FY29+. Stock +1.7% on the day."}, {"id": "a04", "ticker": "TATAMOTORS", "name": "Tata Motors", "category": "management_change", "priority": "high", "time": "2026-11-02T08:20:00+05:30", "title": "Appointment of Group Chief Financial Officer", "summary": "New Group CFO joins from a global auto OEM; capital-allocation continuity in focus post-demerger.", "management_change": {"role": "Group Chief Financial Officer", "direction": "in", "person": {"name": "Ananya Krishnan", "headline": "Ex-Finance Director, Volvo Cars (Asia-Pacific)", "bio": "20+ years in automotive finance. Led APAC treasury & FP&A at Volvo Cars; earlier 9 years at Ford in powertrain cost & product finance. CA (ICAI) and MBA (INSEAD). Known for net-debt reduction programmes.", "prev": "Finance Director, Volvo Cars APAC", "tenure_prev": "2019–2026"}, "replacing": "Outgoing CFO retiring after 11 years."}, "detail": "Comes weeks after the PV/CV demerger. Market read: continuity on the JLR deleveraging path. Enrichment below is public professional background only (push-side enrichment is permitted)."}, {"id": "a05", "ticker": "TATAMOTORS", "name": "Tata Motors", "category": "press_release", "priority": "medium", "time": "2026-11-01T14:05:00+05:30", "title": "JLR October wholesales update", "summary": "JLR wholesales -6% YoY; Range Rover order book still >12 weeks. China soft.", "detail": "Chip supply normalised; demand-side softness in China the swing factor. Contributed to today's -1.7% move alongside CFO transition headline."}, {"id": "a06", "ticker": "RELIANCE", "name": "Reliance Industries", "category": "fund_raise", "priority": "high", "time": "2026-11-01T20:15:00+05:30", "title": "Jio Platforms — pre-IPO; board approves ₹18,000 cr preferential allotment to anchor investors", "summary": "Pre-IPO raise at implied ~₹11.2L cr valuation for Jio; sets the marker ahead of listing.", "detail": "Preferential allotment to a sovereign-fund-led consortium. Implied Jio valuation steps up ~14% vs the last external mark. Reliance +1.25% today."}, {"id": "a07", "ticker": "ADANIPORTS", "name": "Adani Ports & SEZ", "category": "credit_rating", "priority": "medium", "time": "2026-11-01T11:30:00+05:30", "title": "CRISIL reaffirms AAA/Stable; revises outlook commentary", "summary": "Rating AAA reaffirmed, stable. Deleveraging + record cargo cited. No action needed.", "detail": "Net debt/EBITDA guided below 2.5x. Reaffirmation, not an upgrade — low surprise, surfaced at medium priority."}, {"id": "a08", "ticker": "TATASTEEL", "name": "Tata Steel", "category": "capex", "priority": "medium", "time": "2026-11-01T16:50:00+05:30", "title": "Board approves ₹27,000 cr Kalinganagar phase-III expansion", "summary": "Adds 5 MTPA; commissioning FY30. Funded 60:40 debt:internal accruals.", "detail": "Steps up domestic capacity to counter European drag. Watch leverage — D/E already elevated."}, {"id": "a09", "ticker": "HDFCBANK", "name": "HDFC Bank", "category": "insider_trading", "priority": "low", "time": "2026-11-01T17:20:00+05:30", "title": "Disclosure under SEBI (PIT) — designated person sale", "summary": "A senior executive sold 12,000 shares (ESOP-linked). Immaterial vs holding.", "detail": "Routine ESOP monetisation. Surfaced low; included for completeness."}, {"id": "a10", "ticker": "SUNPHARMA", "name": "Sun Pharmaceutical", "category": "litigation", "priority": "high", "time": "2026-11-01T13:10:00+05:30", "title": "USFDA issues 3 observations (Form 483) for Halol facility", "summary": "Form 483, not a warning letter. 3 observations, procedural. Watch for escalation.", "detail": "Halol is a key export site. Market treated as low-to-medium risk (stock +0.5%); flagged high because facility is material to US revenue."}, {"id": "a11", "ticker": "BAJFINANCE", "name": "Bajaj Finance", "category": "results", "priority": "high", "time": "2026-10-31T19:00:00+05:30", "title": "Q2 FY27 Results", "summary": "AUM +27% YoY; PAT +18% YoY. Credit costs tick up; NIM stable. In line.", "results": {"quarters": ["Q2 FY26", "Q1 FY27", "Q2 FY27"], "rows": [{"metric": "Total income", "values": [14200, 16050, 16880]}, {"metric": "Net interest income", "values": [9180, 10380, 10920]}, {"metric": "PBT", "values": [5460, 6180, 6440]}, {"metric": "PAT", "values": [4040, 4570, 4760]}], "source": {"kind": "sample", "label": "Illustrative sample data", "would_be": "Screener.in quarterly table, reconciled to the results filing"}, "reconciliation": {"status": "unverified", "reason": "sample data — no filing to reconcile against"}, "basis": "lender"}, "detail": "Lender: read on net interest income, AUM growth, NIM and credit costs — not EBITDA, which is meaningless for a balance-sheet business. Credit cost guided 2.0–2.1% for FY27. No surprises."}, {"id": "a12", "ticker": "ITC", "name": "ITC", "category": "dividend", "priority": "low", "time": "2026-10-31T16:00:00+05:30", "title": "Interim dividend of ₹6.50 per share declared; record date 14 Nov", "summary": "Interim dividend ₹6.50/sh, record date 14 Nov. In line with policy.", "detail": "High payout continues. Dividend yield ~2.9% annualised. Routine; low priority."}, {"id": "a13", "ticker": "POLYCAB", "name": "Polycab India", "category": "earnings_call", "priority": "low", "time": "2026-10-31T10:00:00+05:30", "title": "Notice of earnings conference call — 5 Nov, 4:00 PM IST", "summary": "Q2 concall scheduled 5 Nov. Transcript will feed Pull analysis when live.", "detail": "Calendar item. FINN will auto-ingest the transcript post-call for the research view."}, {"id": "a14", "ticker": "DMART", "name": "Avenue Supermarts", "category": "press_release", "priority": "medium", "time": "2026-10-31T09:40:00+05:30", "title": "Standalone revenue update for Q2 — 24 new stores added", "summary": "Revenue +17% YoY on store adds; SSSG ~8%. Footprint now 415 stores.", "detail": "Pre-results business update. Density of store adds strong; margin detail awaits full results."}, {"id": "a15", "ticker": "INFY", "name": "Infosys", "category": "results", "priority": "high", "time": "2026-10-30T18:30:00+05:30", "title": "Q2 FY27 Results + FY27 revenue guidance revision", "summary": "Revenue +4.1% YoY CC; PAT +7% YoY. FY27 CC growth guidance RAISED to 3.5–4.5%.", "results": {"quarters": ["Q2 FY26", "Q1 FY27", "Q2 FY27"], "rows": [{"metric": "Revenue", "values": [40986, 42280, 42910]}, {"metric": "EBITDA", "values": [9430, 9760, 9980]}, {"metric": "PBT", "values": [8510, 8820, 9010]}, {"metric": "PAT", "values": [6506, 6720, 6960]}], "ebitda_margin": [23.0, 23.1, 23.3], "source": {"kind": "sample", "label": "Illustrative sample data", "would_be": "Screener.in quarterly table, reconciled to the results filing"}, "reconciliation": {"status": "unverified", "reason": "sample data — no filing to reconcile against"}, "basis": "operating"}, "detail": "Guidance raise is the signal here (prior 2.0–3.0% CC). Large-deal TCV $2.9bn. Margin +20bps QoQ."}, {"id": "a16", "ticker": "POWERGRID", "name": "Power Grid Corp", "category": "bonus_split", "priority": "low", "time": "2026-10-30T15:20:00+05:30", "title": "Board to consider bonus issue on 8 Nov", "summary": "Bonus issue under consideration (8 Nov board). Share count event, no cash.", "detail": "Intimation only. Ratio not yet announced."}, {"id": "a17", "ticker": "TITAN", "name": "Titan Company", "category": "press_release", "priority": "medium", "time": "2026-10-30T12:00:00+05:30", "title": "Festive-quarter jewellery sales update", "summary": "Jewellery division +19% YoY in festive period; buyer growth double-digit.", "detail": "Strong Diwali demand; studded ratio improving (margin-positive). Full results later this month."}, {"id": "a18", "ticker": "VBL", "name": "Varun Beverages", "category": "M&A", "priority": "medium", "time": "2026-10-30T11:15:00+05:30", "title": "Acquires distribution rights for new territory (South Africa adjacency)", "summary": "Expands Africa footprint; small bolt-on, long-runway optionality.", "detail": "Immaterial to FY27 numbers but strategically consistent with international expansion thesis."}, {"id": "a19", "ticker": "ITC", "name": "ITC", "category": "unclassified", "priority": "routine", "time": "2026-10-30T10:05:00+05:30", "title": "Compliance certificate under Reg 7(3) — RTA", "summary": "Routine compliance filing. No investor action.", "detail": "Hidden by default in the digest (routine bucket)."}, {"id": "a20", "ticker": "TCS", "name": "Tata Consultancy Services", "category": "insider_trading", "priority": "routine", "time": "2026-10-30T09:30:00+05:30", "title": "SAST disclosure — negligible promoter transfer (inter-se)", "summary": "Inter-se promoter transfer, no open-market impact.", "detail": "Routine; collapsed by default."}, {"id": "a21", "ticker": "POWERGRID", "name": "Power Grid Corp", "category": "unclassified", "priority": "routine", "time": "2026-10-29T17:00:00+05:30", "title": "ESG report FY26 made available on website", "summary": "Routine ESG disclosure.", "detail": "Low relevance; hidden by default."}, {"id": "a22", "ticker": "HDFCBANK", "name": "HDFC Bank", "category": "agm_egm", "priority": "low", "time": "2026-10-29T16:20:00+05:30", "title": "Postal-ballot results — all resolutions passed", "summary": "All resolutions passed, including reappointment of directors.", "detail": "Governance housekeeping; low priority."}, {"id": "a23", "ticker": "KPITTECH", "name": "KPIT Technologies", "category": "results", "priority": "high", "time": "2026-10-29T18:00:00+05:30", "title": "Q2 FY27 Results", "summary": "Revenue +19% YoY CC; EBITDA margin 21.2%. Strong order intake; auto-software cycle intact.", "results": {"quarters": ["Q2 FY26", "Q1 FY27", "Q2 FY27"], "rows": [{"metric": "Revenue", "values": [1428, 1602, 1685]}, {"metric": "EBITDA", "values": [290, 336, 357]}, {"metric": "PBT", "values": [232, 268, 286]}, {"metric": "PAT", "values": [178, 205, 219]}], "ebitda_margin": [20.3, 20.98, 21.19], "source": {"kind": "sample", "label": "Illustrative sample data", "would_be": "Screener.in quarterly table, reconciled to the results filing"}, "reconciliation": {"status": "unverified", "reason": "sample data — no filing to reconcile against"}, "basis": "operating"}, "detail": "Ad-hoc universe company (not in portfolio) — shown to demo generalised results parsing."}, {"id": "a24", "ticker": "ADANIPORTS", "name": "Adani Ports & SEZ", "category": "pledging", "priority": "medium", "time": "2026-10-29T15:00:00+05:30", "title": "Promoter releases pledge on 1.2% of shares", "summary": "Pledge RELEASED on 1.2% — deleveraging signal, risk-reducing.", "detail": "Direction matters: release (not creation) of pledge. Mildly positive governance signal."}, {"id": "a25", "ticker": "RELIANCE", "name": "Reliance Industries", "category": "investor_meetings", "priority": "low", "time": "2026-10-29T12:30:00+05:30", "title": "Intimation — participation in global investor conference", "summary": "Management to meet investors at a broker-hosted conference.", "detail": "Calendar/disclosure item; low priority."}, {"id": "a26", "ticker": "SUNPHARMA", "name": "Sun Pharmaceutical", "category": "dividend", "priority": "low", "time": "2026-10-28T16:40:00+05:30", "title": "Interim dividend ₹5.00/share; record date 12 Nov", "summary": "Interim dividend ₹5.00/sh declared.", "detail": "Routine capital return."}], "research": {"DIXON": {"ticker": "DIXON", "name": "Dixon Technologies (India) Ltd", "sector": "EMS / Electronics Manufacturing", "as_of": "Q2 FY27 (quarter ended Sep 2026)", "sources": [{"kind": "annual_report", "label": "Annual Report FY26 (sample)"}, {"kind": "concall_transcript", "label": "Q2 FY27 concall transcript (sample)"}, {"kind": "concall_transcript", "label": "Q1 FY27 concall transcript (sample)"}, {"kind": "concall_transcript", "label": "Q4 FY26 concall transcript (sample)"}, {"kind": "concall_transcript", "label": "Q3 FY26 concall transcript (sample)"}, {"kind": "screener_table", "label": "Standardised quarterly tables (sample)"}], "grounding_note": "Illustrative sample. In live mode, quotes come from the company's own concall transcripts and annual report; figures come from Screener.in's standardised tables, labelled as a secondary source and reconciled to results filings where available.", "business_snapshot": {"what": "India's largest electronics manufacturing services (EMS) company — designs and builds products for global and domestic brands (ODM/OEM).", "segments": [{"name": "Mobile & EMS", "rev_share": 72, "note": "Smartphones + feature phones; the growth engine. Key anchor customers under PLI."}, {"name": "Consumer Electronics (TVs)", "rev_share": 12, "note": "LED TVs for large brands; mature, lower-margin."}, {"name": "Home Appliances", "rev_share": 8, "note": "Washing machines; ODM mix rising."}, {"name": "Lighting", "rev_share": 5, "note": "LED bulbs/battens; the original business, now small."}, {"name": "Others (Wearables, Telecom, Display)", "rev_share": 3, "note": "Display fab is the new optionality."}], "model": "Thin-margin, high-asset-turn. Value accrues via scale, backward integration (components, display) and ODM share gains."}, "financial_snapshot": {"metrics": [{"k": "Revenue (Q2 FY27)", "v": "₹14,290 cr", "sub": "+38% YoY", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "EBITDA margin", "v": "4.42%", "sub": "+0.37 pp QoQ", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "PAT (Q2 FY27)", "v": "₹341 cr", "sub": "+61% YoY", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "ROCE (FY26)", "v": "28.4%", "sub": "high asset turn", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "Net debt/EBITDA", "v": "0.3x", "sub": "lightly levered", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "CFO ÷ EBITDA (FY26)", "v": "0.71", "sub": "CFO/EBITDA", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}]}, "trajectory": {"series_label": "Revenue (₹ cr) & EBITDA margin (%)", "quarters": ["Q3 FY25", "Q4 FY25", "Q1 FY26", "Q2 FY26", "Q3 FY26", "Q4 FY26", "Q1 FY27", "Q2 FY27"], "revenue": [7200, 8100, 8650, 9340, 10850, 11980, 12760, 14290], "pat": [150, 170, 190, 212, 238, 271, 289, 341], "read": "Revenue compounding ~10% QoQ for four quarters while margin grinds up ~30bps — operating leverage plus mix shift to ODM/display. The margin line is the thing to watch: EMS bulls are paying for the slope, not the level.", "margin": [3.95, 4.0, 4.02, 4.05, 4.1, 4.18, 4.23, 4.42], "margin_label": "EBITDA margin"}, "balance_sheet": {"points": [{"k": "Debt/Equity", "v": "0.34", "read": "Modest; capex largely internally funded + PLI.", "source": {"kind": "annual_report", "label": "Annual report (sample)"}}, {"k": "Working-capital days", "v": "18 days", "read": "Negative-to-low WC is the EMS superpower — suppliers + advances fund growth.", "source": {"kind": "annual_report", "label": "Annual report (sample)"}}, {"k": "Contingent liabilities", "v": "₹610 cr", "read": "Mostly customs/duty disputes; ~9% of net worth — monitor, not alarming.", "source": {"kind": "annual_report", "label": "Annual report (sample)"}}, {"k": "Capex FY27E", "v": "₹1,900 cr", "read": "Display fab + component backward-integration. The leverage risk lives here if ramp slips.", "source": {"kind": "annual_report", "label": "Annual report (sample)"}}]}, "cash_quality": {"cfo_ebitda": [0.55, 0.63, 0.68, 0.71], "quarters": ["FY23", "FY24", "FY25", "FY26"], "read": "Cash conversion improving as scale normalises working capital. Still below 1.0 — profits are real but growth consumes cash, so FCF is thin while in capex phase. Not a red flag; a growth-stage signature.", "applicable": true}, "bull_bear": {"bull": ["ODM + backward integration structurally lifts a 4% margin toward 5–6% over time — small bps moves are large on this base.", "Display fab is a call option the market is only starting to price; pulled forward vs guidance.", "Negative working capital means growth is self-funding — rare in a capex-heavy story."], "bear": ["Still a ~4% EBITDA-margin assembler; customer concentration and pricing power are real constraints.", "Valuation discounts years of flawless execution — any display-ramp slip re-rates it hard.", "Capex intensity (₹1,900 cr) could pressure the clean balance sheet if volumes disappoint."]}, "profile": "operating", "sample": true, "series": {"periods": ["Q3 FY25", "Q4 FY25", "Q1 FY26", "Q2 FY26", "Q3 FY26", "Q4 FY26", "Q1 FY27", "Q2 FY27"], "revenue": [7200, 8100, 8650, 9340, 10850, 11980, 12760, 14290], "ebitda": [284, 324, 348, 378, 445, 501, 540, 632], "pat": [150, 170, 190, 212, 238, 271, 289, 341], "source": {"kind": "sample", "label": "Illustrative sample data", "would_be": "Screener.in quarterly table"}}, "commitments": [{"said_in": "Q3 FY26", "metric": "revenue", "direction": "at_least", "target_low": 11500, "target_high": null, "horizon": "Q4 FY26", "quote": "We expect Q4 revenue to comfortably exceed 11,500 crore.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q3 FY26 earnings-call transcript (sample)"}}, {"said_in": "Q3 FY26", "metric": "ebitda_margin", "direction": "at_least", "target_low": 4.3, "target_high": null, "horizon": "FY27 exit", "quote": "Margins should inch towards 4.3% by the exit of FY27.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q3 FY26 earnings-call transcript (sample)"}}, {"said_in": "Q4 FY26", "metric": "pat_growth_yoy", "direction": "at_least", "target_low": 40, "target_high": null, "horizon": "Q1 FY27", "quote": "We are confident of 40%-plus PAT growth in the first quarter.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q4 FY26 earnings-call transcript (sample)"}}, {"said_in": "Q4 FY26", "metric": "other", "direction": "at_least", "target_low": null, "target_high": null, "horizon": "H2 FY27", "quote": "The display JV should start contributing from H2 FY27; we are not baking in any revenue in H1.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q4 FY26 earnings-call transcript (sample)"}, "note": "qualitative milestone that needs segment disclosure; flagged for analyst review", "label": "Display JV contribution"}, {"said_in": "Q1 FY27", "metric": "revenue", "direction": "at_least", "target_low": 55000, "target_high": null, "horizon": "FY27", "quote": "For FY27 we expect revenue to cross 55,000 crore.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q1 FY27 earnings-call transcript (sample)"}}, {"said_in": "Q1 FY27", "metric": "ebitda_margin", "direction": "range", "target_low": 4.3, "target_high": 4.5, "horizon": "FY27", "quote": "We are guiding to an EBITDA margin band of 4.3 to 4.5% for the year.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q1 FY27 earnings-call transcript (sample)"}}, {"said_in": "Q2 FY27", "metric": "ebitda_margin", "direction": "increase", "target_low": null, "target_high": null, "horizon": "next quarter", "quote": "With a full quarter of display, Q3 should see a further margin step-up.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q2 FY27 earnings-call transcript (sample)"}}], "ledger_read": "Every commitment that has reached its evaluation date was met or beaten. The larger FY27 calls are still open: H1 revenue annualises just under the ₹55,000 cr marker, while year-to-date margin sits inside the guided band.", "ledger": {"as_of": "Q2 FY27", "rows": [{"metric": "ebitda_margin", "direction": "at_least", "target_low": 4.3, "target_high": null, "horizon": "FY27 exit", "said_in": "Q3 FY26", "quote": "Margins should inch towards 4.3% by the exit of FY27.", "source": {"kind": "concall_transcript", "label": "Q3 FY26 earnings-call transcript (sample)"}, "basis": "exit", "horizon_end": "Q4 FY27", "quote_verified": null, "id": "69a3e0f3bd70", "issues": [], "note": "", "label": "", "metric_label": "EBITDA margin", "target_text": "≥ 4.30%", "evaluation": {"status": "in_progress", "actual": null, "actual_period": null, "interim": {"label": "latest quarter Q2 FY27", "value": 4.42}, "reason": "Evaluation date Q4 FY27 not reached. Interim latest quarter Q2 FY27: 4.42% vs target ≥ 4.30%."}}, {"metric": "revenue", "direction": "at_least", "target_low": 11500.0, "target_high": null, "horizon": "Q4 FY26", "said_in": "Q3 FY26", "quote": "We expect Q4 revenue to comfortably exceed 11,500 crore.", "source": {"kind": "concall_transcript", "label": "Q3 FY26 earnings-call transcript (sample)"}, "basis": "quarter", "horizon_end": "Q4 FY26", "quote_verified": null, "id": "10711c3c4b0e", "issues": [], "note": "", "label": "", "metric_label": "Revenue", "target_text": "≥ ₹11,500 cr", "evaluation": {"status": "achieved", "actual": 11980, "actual_period": "Q4 FY26", "interim": null, "reason": "Reported Revenue for Q4 FY26: ₹11,980 cr vs target ≥ ₹11,500 cr → achieved."}}, {"metric": "other", "direction": "at_least", "target_low": null, "target_high": null, "horizon": "H2 FY27", "said_in": "Q4 FY26", "quote": "The display JV should start contributing from H2 FY27; we are not baking in any revenue in H1.", "source": {"kind": "concall_transcript", "label": "Q4 FY26 earnings-call transcript (sample)"}, "basis": "half", "horizon_end": "Q4 FY27", "quote_verified": null, "id": "1f401a94aa3d", "issues": ["metric not computable from reported tables", "no numeric target"], "note": "qualitative milestone that needs segment disclosure; flagged for analyst review", "label": "Display JV contribution", "metric_label": "Display JV contribution", "target_text": "qualitative", "evaluation": {"status": "not_evaluable", "actual": null, "actual_period": null, "interim": null, "reason": "Not scored: qualitative milestone that needs segment disclosure; flagged for analyst review."}}, {"metric": "pat_growth_yoy", "direction": "at_least", "target_low": 40.0, "target_high": null, "horizon": "Q1 FY27", "said_in": "Q4 FY26", "quote": "We are confident of 40%-plus PAT growth in the first quarter.", "source": {"kind": "concall_transcript", "label": "Q4 FY26 earnings-call transcript (sample)"}, "basis": "quarter", "horizon_end": "Q1 FY27", "quote_verified": null, "id": "2bf1a7a04344", "issues": [], "note": "", "label": "", "metric_label": "PAT growth YoY", "target_text": "≥ 40.00%", "evaluation": {"status": "exceeded", "actual": 52.11, "actual_period": "Q1 FY27", "interim": null, "reason": "Reported PAT growth YoY for Q1 FY27: 52.11% vs target ≥ 40.00% → exceeded."}}, {"metric": "ebitda_margin", "direction": "range", "target_low": 4.3, "target_high": 4.5, "horizon": "FY27", "said_in": "Q1 FY27", "quote": "We are guiding to an EBITDA margin band of 4.3 to 4.5% for the year.", "source": {"kind": "concall_transcript", "label": "Q1 FY27 earnings-call transcript (sample)"}, "basis": "full_year", "horizon_end": "Q4 FY27", "quote_verified": null, "id": "da9fdbb12f8e", "issues": [], "note": "", "label": "", "metric_label": "EBITDA margin", "target_text": "4.30%–4.50%", "evaluation": {"status": "in_progress", "actual": null, "actual_period": null, "interim": {"label": "YTD Q1–Q2 FY27", "value": 4.33}, "reason": "Evaluation date Q4 FY27 not reached. Interim YTD Q1–Q2 FY27: 4.33% vs target 4.30%–4.50%."}}, {"metric": "revenue", "direction": "at_least", "target_low": 55000.0, "target_high": null, "horizon": "FY27", "said_in": "Q1 FY27", "quote": "For FY27 we expect revenue to cross 55,000 crore.", "source": {"kind": "concall_transcript", "label": "Q1 FY27 earnings-call transcript (sample)"}, "basis": "full_year", "horizon_end": "Q4 FY27", "quote_verified": null, "id": "8cc51db806c2", "issues": [], "note": "", "label": "", "metric_label": "Revenue", "target_text": "≥ ₹55,000 cr", "evaluation": {"status": "in_progress", "actual": null, "actual_period": null, "interim": {"label": "YTD Q1–Q2 FY27", "value": 27050, "run_rate": 54100.0}, "reason": "Evaluation date Q4 FY27 not reached. Interim YTD Q1–Q2 FY27: ₹27,050 cr (annualised run-rate ₹54,100 cr) vs target ≥ ₹55,000 cr."}}, {"metric": "ebitda_margin", "direction": "increase", "target_low": null, "target_high": null, "horizon": "next quarter", "said_in": "Q2 FY27", "quote": "With a full quarter of display, Q3 should see a further margin step-up.", "source": {"kind": "concall_transcript", "label": "Q2 FY27 earnings-call transcript (sample)"}, "basis": "quarter", "horizon_end": "Q3 FY27", "quote_verified": null, "id": "17581ed1a584", "issues": [], "note": "", "label": "", "metric_label": "EBITDA margin", "target_text": "increase", "evaluation": {"status": "pending", "actual": null, "actual_period": null, "interim": null, "reason": "Baseline Q2 FY27: 4.42%. Scored when Q3 FY27 is reported."}}], "counts": {"exceeded": 1, "achieved": 1, "missed": 0, "in_progress": 3, "pending": 1, "not_evaluable": 1}, "delivery_rate": 100, "resolved": 2, "series_source": {"kind": "sample", "label": "Illustrative sample data", "would_be": "Screener.in quarterly table"}, "method": "LLM extracts commitments and quotes; verdicts are computed by commitments.evaluate() against reported quarterly figures for the stated horizon.", "read": "Every commitment that has reached its evaluation date was met or beaten. The larger FY27 calls are still open: H1 revenue annualises just under the ₹55,000 cr marker, while year-to-date margin sits inside the guided band."}}, "ASIANPAINT": {"ticker": "ASIANPAINT", "name": "Asian Paints Ltd", "sector": "Consumer / Decorative Paints", "as_of": "Q2 FY27 (quarter ended Sep 2026)", "sources": [{"kind": "annual_report", "label": "Annual Report FY26 (sample)"}, {"kind": "concall_transcript", "label": "Q2 FY27 concall transcript (sample)"}, {"kind": "concall_transcript", "label": "Q1 FY27 concall transcript (sample)"}, {"kind": "screener_table", "label": "Standardised quarterly tables (sample)"}], "grounding_note": "Illustrative sample. In live mode, quotes come from the company's own concall transcripts and annual report; figures come from Screener.in's standardised tables, labelled as a secondary source and reconciled to results filings where available.", "business_snapshot": {"what": "India's largest paints company; decorative paints dominate, with a growing home-décor and industrial (via JVs) adjacency.", "segments": [{"name": "Decorative (India)", "rev_share": 82, "note": "Core; volume + mix driven. Under new competitive pressure."}, {"name": "Industrial & Auto (JVs)", "rev_share": 9, "note": "PPG JVs; steadier margins."}, {"name": "International", "rev_share": 6, "note": "Asia/Africa; currency-exposed."}, {"name": "Home Décor / Bath & Kitchen", "rev_share": 3, "note": "Strategic adjacency, still sub-scale."}], "model": "Brand + distribution moat (>150k dealers, tinting machines). Pricing power historically strong — now being tested."}, "financial_snapshot": {"metrics": [{"k": "Revenue (Q2 FY27)", "v": "₹8,205 cr", "sub": "-3% YoY", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "EBITDA margin", "v": "15.97%", "sub": "-2.82 pp YoY", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "PAT (Q2 FY27)", "v": "₹878 cr", "sub": "-14% YoY", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "ROCE (FY26)", "v": "27.1%", "sub": "still high", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "Net cash", "v": "net cash", "sub": "debt-free", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "CFO ÷ EBITDA (FY26)", "v": "0.95", "sub": "excellent", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}]}, "trajectory": {"series_label": "Revenue (₹ cr) & EBITDA margin (%)", "quarters": ["Q3 FY25", "Q4 FY25", "Q1 FY26", "Q2 FY26", "Q3 FY26", "Q4 FY26", "Q1 FY27", "Q2 FY27"], "revenue": [8550, 8380, 8930, 8460, 8820, 8640, 8990, 8205], "pat": [1180, 1110, 1170, 1020, 1130, 1005, 965, 878], "read": "The classic 'narrative vs numbers' setup: a franchise with pristine returns whose margin line has fallen four quarters running as new entrants discount. The level (16%) is still good; the slope is the worry.", "margin": [19.6, 19.2, 19.4, 18.79, 18.5, 17.8, 16.91, 15.97], "margin_label": "EBITDA margin"}, "balance_sheet": {"points": [{"k": "Debt/Equity", "v": "~0.0 (net cash)", "read": "Fortress balance sheet — can out-spend competitors on A&P and capacity.", "source": {"kind": "annual_report", "label": "Annual report (sample)"}}, {"k": "Working-capital days", "v": "24 days", "read": "Tight; dealer-funded distribution.", "source": {"kind": "annual_report", "label": "Annual report (sample)"}}, {"k": "Contingent liabilities", "v": "₹540 cr", "read": "Routine tax matters.", "source": {"kind": "annual_report", "label": "Annual report (sample)"}}, {"k": "Capex", "v": "₹1,100 cr", "read": "New capacity amid a demand-soft patch — defending share.", "source": {"kind": "annual_report", "label": "Annual report (sample)"}}]}, "cash_quality": {"cfo_ebitda": [0.98, 0.96, 0.95, 0.93], "quarters": ["FY23", "FY24", "FY25", "FY26"], "read": "Cash conversion remains excellent (~0.93) even as margins slip — profits are high quality and real. The problem is the P&L, not the cash flow.", "applicable": true}, "bull_bear": {"bull": ["Best-in-class returns and a net-cash balance sheet — it can simply outlast new entrants.", "Cash conversion ~0.93 proves earnings quality is intact; this is a margin dip, not a business break.", "If pricing normalises, the operating leverage snaps margin back fast off the current trough."], "bear": ["Three consecutive guidance misses on margin — management's forward credibility is impaired.", "Competitive intensity looks structural, not 'transient' as framed — a permanent re-rate of the moat.", "Premium valuation still embeds pricing power that the numbers are actively questioning."]}, "profile": "operating", "sample": true, "series": {"periods": ["Q3 FY25", "Q4 FY25", "Q1 FY26", "Q2 FY26", "Q3 FY26", "Q4 FY26", "Q1 FY27", "Q2 FY27"], "revenue": [8550, 8380, 8930, 8460, 8820, 8640, 8990, 8205], "ebitda": [1676, 1609, 1732, 1590, 1632, 1538, 1520, 1310], "pat": [1180, 1110, 1170, 1020, 1130, 1005, 965, 878], "source": {"kind": "sample", "label": "Illustrative sample data", "would_be": "Screener.in quarterly table"}}, "commitments": [{"said_in": "Q3 FY26", "metric": "ebitda_margin", "direction": "at_least", "target_low": 18.5, "target_high": null, "horizon": "Q4 FY26", "quote": "We see fourth-quarter margins holding above 18.5%.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q3 FY26 earnings-call transcript (sample)"}}, {"said_in": "Q3 FY26", "metric": "ebitda_margin", "direction": "range", "target_low": 18, "target_high": 20, "horizon": "FY27", "quote": "We remain comfortable with our 18 to 20% margin band for FY27.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q3 FY26 earnings-call transcript (sample)"}}, {"said_in": "Q4 FY26", "metric": "ebitda_margin", "direction": "at_least", "target_low": 18, "target_high": null, "horizon": "Q1 FY27", "quote": "Competitive intensity is transient; we expect Q1 margins back above 18%.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q4 FY26 earnings-call transcript (sample)"}}, {"said_in": "Q1 FY27", "metric": "revenue_growth_yoy", "direction": "at_least", "target_low": 5, "target_high": null, "horizon": "Q2 FY27", "quote": "The festive quarter will be volume-led and we expect at least 5% revenue growth.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q1 FY27 earnings-call transcript (sample)"}}, {"said_in": "Q2 FY27", "metric": "ebitda_margin", "direction": "range", "target_low": 16.5, "target_high": 17.5, "horizon": "FY27 exit", "quote": "We expect margins to recover to around 17% by the exit of FY27.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q2 FY27 earnings-call transcript (sample)"}}, {"said_in": "Q2 FY27", "metric": "other", "direction": "at_least", "target_low": null, "target_high": null, "horizon": "FY27", "quote": "We will return to double-digit volume growth.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q2 FY27 earnings-call transcript (sample)"}, "note": "volume growth is not disclosed in the standard financial tables", "label": "Volume growth"}], "ledger_read": "All three commitments that have come due were missed, each on margin or growth recovery. The FY27 band and exit-margin calls remain open, but year-to-date margin is already below both.", "ledger": {"as_of": "Q2 FY27", "rows": [{"metric": "ebitda_margin", "direction": "at_least", "target_low": 18.5, "target_high": null, "horizon": "Q4 FY26", "said_in": "Q3 FY26", "quote": "We see fourth-quarter margins holding above 18.5%.", "source": {"kind": "concall_transcript", "label": "Q3 FY26 earnings-call transcript (sample)"}, "basis": "quarter", "horizon_end": "Q4 FY26", "quote_verified": null, "id": "60f1494c749a", "issues": [], "note": "", "label": "", "metric_label": "EBITDA margin", "target_text": "≥ 18.50%", "evaluation": {"status": "missed", "actual": 17.8, "actual_period": "Q4 FY26", "interim": null, "reason": "Reported EBITDA margin for Q4 FY26: 17.80% vs target ≥ 18.50% → missed."}}, {"metric": "ebitda_margin", "direction": "range", "target_low": 18.0, "target_high": 20.0, "horizon": "FY27", "said_in": "Q3 FY26", "quote": "We remain comfortable with our 18 to 20% margin band for FY27.", "source": {"kind": "concall_transcript", "label": "Q3 FY26 earnings-call transcript (sample)"}, "basis": "full_year", "horizon_end": "Q4 FY27", "quote_verified": null, "id": "c0cf73abc8a6", "issues": [], "note": "", "label": "", "metric_label": "EBITDA margin", "target_text": "18.00%–20.00%", "evaluation": {"status": "in_progress", "actual": null, "actual_period": null, "interim": {"label": "YTD Q1–Q2 FY27", "value": 16.46}, "reason": "Evaluation date Q4 FY27 not reached. Interim YTD Q1–Q2 FY27: 16.46% vs target 18.00%–20.00%."}}, {"metric": "ebitda_margin", "direction": "at_least", "target_low": 18.0, "target_high": null, "horizon": "Q1 FY27", "said_in": "Q4 FY26", "quote": "Competitive intensity is transient; we expect Q1 margins back above 18%.", "source": {"kind": "concall_transcript", "label": "Q4 FY26 earnings-call transcript (sample)"}, "basis": "quarter", "horizon_end": "Q1 FY27", "quote_verified": null, "id": "64ce903375e0", "issues": [], "note": "", "label": "", "metric_label": "EBITDA margin", "target_text": "≥ 18.00%", "evaluation": {"status": "missed", "actual": 16.91, "actual_period": "Q1 FY27", "interim": null, "reason": "Reported EBITDA margin for Q1 FY27: 16.91% vs target ≥ 18.00% → missed."}}, {"metric": "revenue_growth_yoy", "direction": "at_least", "target_low": 5.0, "target_high": null, "horizon": "Q2 FY27", "said_in": "Q1 FY27", "quote": "The festive quarter will be volume-led and we expect at least 5% revenue growth.", "source": {"kind": "concall_transcript", "label": "Q1 FY27 earnings-call transcript (sample)"}, "basis": "quarter", "horizon_end": "Q2 FY27", "quote_verified": null, "id": "e46fb27aab40", "issues": [], "note": "", "label": "", "metric_label": "Revenue growth YoY", "target_text": "≥ 5.00%", "evaluation": {"status": "missed", "actual": -3.01, "actual_period": "Q2 FY27", "interim": null, "reason": "Reported Revenue growth YoY for Q2 FY27: -3.01% vs target ≥ 5.00% → missed."}}, {"metric": "ebitda_margin", "direction": "range", "target_low": 16.5, "target_high": 17.5, "horizon": "FY27 exit", "said_in": "Q2 FY27", "quote": "We expect margins to recover to around 17% by the exit of FY27.", "source": {"kind": "concall_transcript", "label": "Q2 FY27 earnings-call transcript (sample)"}, "basis": "exit", "horizon_end": "Q4 FY27", "quote_verified": null, "id": "01e6de2522c3", "issues": [], "note": "", "label": "", "metric_label": "EBITDA margin", "target_text": "16.50%–17.50%", "evaluation": {"status": "in_progress", "actual": null, "actual_period": null, "interim": {"label": "latest quarter Q2 FY27", "value": 15.97}, "reason": "Evaluation date Q4 FY27 not reached. Interim latest quarter Q2 FY27: 15.97% vs target 16.50%–17.50%."}}, {"metric": "other", "direction": "at_least", "target_low": null, "target_high": null, "horizon": "FY27", "said_in": "Q2 FY27", "quote": "We will return to double-digit volume growth.", "source": {"kind": "concall_transcript", "label": "Q2 FY27 earnings-call transcript (sample)"}, "basis": "full_year", "horizon_end": "Q4 FY27", "quote_verified": null, "id": "4590a73e0e4b", "issues": ["metric not computable from reported tables", "no numeric target"], "note": "volume growth is not disclosed in the standard financial tables", "label": "Volume growth", "metric_label": "Volume growth", "target_text": "qualitative", "evaluation": {"status": "not_evaluable", "actual": null, "actual_period": null, "interim": null, "reason": "Not scored: volume growth is not disclosed in the standard financial tables."}}], "counts": {"exceeded": 0, "achieved": 0, "missed": 3, "in_progress": 2, "pending": 0, "not_evaluable": 1}, "delivery_rate": 0, "resolved": 3, "series_source": {"kind": "sample", "label": "Illustrative sample data", "would_be": "Screener.in quarterly table"}, "method": "LLM extracts commitments and quotes; verdicts are computed by commitments.evaluate() against reported quarterly figures for the stated horizon.", "read": "All three commitments that have come due were missed, each on margin or growth recovery. The FY27 band and exit-margin calls remain open, but year-to-date margin is already below both."}}, "INFY": {"ticker": "INFY", "name": "Infosys Ltd", "sector": "IT Services", "as_of": "Q2 FY27 (quarter ended Sep 2026)", "sources": [{"kind": "annual_report", "label": "Annual Report FY26 (sample)"}, {"kind": "concall_transcript", "label": "Q2 FY27 concall transcript (sample)"}, {"kind": "concall_transcript", "label": "Q1 FY27 concall transcript (sample)"}, {"kind": "screener_table", "label": "Standardised quarterly tables (sample)"}], "grounding_note": "Illustrative sample. In live mode, quotes come from the company's own concall transcripts and annual report; figures come from Screener.in's standardised tables, labelled as a secondary source and reconciled to results filings where available.", "business_snapshot": {"what": "Global IT services and consulting; large-deal and digital/AI transformation led.", "segments": [{"name": "Financial Services", "rev_share": 29, "note": "Largest vertical; deal-sensitive."}, {"name": "Retail & CPG", "rev_share": 15, "note": "Discretionary-spend exposed."}, {"name": "Comms/Energy/Utilities", "rev_share": 13, "note": "Steady."}, {"name": "Manufacturing", "rev_share": 15, "note": "Fastest-growing vertical."}, {"name": "Hi-Tech / Life Sciences / Other", "rev_share": 28, "note": "Mixed."}], "model": "People + platforms; margin is a function of utilisation, pricing and onsite mix. AI is both a tailwind (deals) and a deflation risk (pricing)."}, "financial_snapshot": {"metrics": [{"k": "Revenue (Q2 FY27)", "v": "₹42,910 cr", "sub": "+4.1% YoY CC", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "EBITDA margin", "v": "23.3%", "sub": "+0.20 pp QoQ", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "PAT (Q2 FY27)", "v": "₹6,960 cr", "sub": "+7% YoY", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "Large-deal TCV", "v": "$2.9bn", "sub": "healthy", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "Net cash", "v": "net cash", "sub": "high payout", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}, {"k": "CFO ÷ EBITDA (FY26)", "v": "1.02", "sub": "FCF > PAT", "source": {"kind": "screener_table", "label": "Standardised tables (sample)"}}]}, "trajectory": {"series_label": "Revenue (₹ cr) & EBITDA margin (%)", "quarters": ["Q3 FY25", "Q4 FY25", "Q1 FY26", "Q2 FY26", "Q3 FY26", "Q4 FY26", "Q1 FY27", "Q2 FY27"], "revenue": [39500, 40100, 40300, 40986, 41200, 41650, 42280, 42910], "pat": [6310, 6420, 6368, 6506, 6580, 6630, 6720, 6960], "read": "Low-single-digit revenue grind with a steadily rising margin — a cost-discipline story more than a growth story right now. The guidance raise this quarter is what changes the read.", "margin": [22.4, 22.6, 22.7, 23.0, 22.8, 22.9, 23.1, 23.3], "margin_label": "EBITDA margin"}, "balance_sheet": {"points": [{"k": "Debt/Equity", "v": "~0.0 (net cash)", "read": "Capital returned via buybacks + dividends.", "source": {"kind": "annual_report", "label": "Annual report (sample)"}}, {"k": "DSO", "v": "72 days", "read": "Stable receivables; no collection stress.", "source": {"kind": "annual_report", "label": "Annual report (sample)"}}, {"k": "Contingent liabilities", "v": "₹3,200 cr", "read": "Mostly tax disputes; well-covered.", "source": {"kind": "annual_report", "label": "Annual report (sample)"}}, {"k": "Capex", "v": "low", "read": "Asset-light; cash compounds.", "source": {"kind": "annual_report", "label": "Annual report (sample)"}}]}, "cash_quality": {"cfo_ebitda": [0.99, 1.0, 1.01, 1.02], "quarters": ["FY23", "FY24", "FY25", "FY26"], "read": "Textbook cash quality — FCF slightly exceeds PAT. Earnings are as real as it gets; the debate is growth, never accounting.", "applicable": true}, "bull_bear": {"bull": ["Guidance raise signals genuine demand inflection, not just cost control.", "Net-cash, >1.0 cash conversion, ≥85% FCF returned — a compounder's cash profile.", "Margin discipline proven across a soft demand year."], "bear": ["Still low-single-digit CC growth — AI-led pricing deflation is a real medium-term overhang.", "FS concentration leaves it cyclically exposed.", "Valuation prices a recovery that the guidance only just started to confirm."]}, "profile": "operating", "sample": true, "series": {"periods": ["Q3 FY25", "Q4 FY25", "Q1 FY26", "Q2 FY26", "Q3 FY26", "Q4 FY26", "Q1 FY27", "Q2 FY27"], "revenue": [39500, 40100, 40300, 40986, 41200, 41650, 42280, 42910], "ebitda": [8848, 9063, 9148, 9427, 9394, 9538, 9767, 9998], "pat": [6310, 6420, 6368, 6506, 6580, 6630, 6720, 6960], "source": {"kind": "sample", "label": "Illustrative sample data", "would_be": "Screener.in quarterly table"}, "ebit": [7742, 7940, 8020, 8279, 8240, 8372, 8583, 8797]}, "commitments": [{"said_in": "Q3 FY26", "metric": "ebit_margin", "direction": "at_least", "target_low": 20, "target_high": null, "horizon": "Q4 FY26", "quote": "We expect Q4 operating margin to stay at or above 20%.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q3 FY26 earnings-call transcript (sample)"}}, {"said_in": "Q4 FY26", "metric": "other", "direction": "range", "target_low": 1, "target_high": 3, "horizon": "FY27", "quote": "Our FY27 revenue growth guidance is 1 to 3% in constant currency.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q4 FY26 earnings-call transcript (sample)"}, "note": "constant-currency growth can't be derived from INR-reported figures (target shown in %)", "label": "Constant-currency revenue growth"}, {"said_in": "Q4 FY26", "metric": "ebit_margin", "direction": "range", "target_low": 20, "target_high": 22, "horizon": "FY27", "quote": "Operating margin guidance for FY27 is 20 to 22%.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q4 FY26 earnings-call transcript (sample)"}}, {"said_in": "Q1 FY27", "metric": "revenue_growth_yoy", "direction": "at_least", "target_low": 3, "target_high": null, "horizon": "Q2 FY27", "quote": "We expect second-quarter revenue to grow at least 3% year on year.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q1 FY27 earnings-call transcript (sample)"}}, {"said_in": "Q1 FY27", "metric": "pat_growth_yoy", "direction": "at_least", "target_low": 5, "target_high": null, "horizon": "H1 FY27", "quote": "We expect first-half profit growth of at least 5%.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q1 FY27 earnings-call transcript (sample)"}}, {"said_in": "Q2 FY27", "metric": "other", "direction": "range", "target_low": 3.5, "target_high": 4.5, "horizon": "FY27", "quote": "We are raising FY27 constant-currency growth guidance to 3.5 to 4.5%.", "quote_verified": null, "source": {"kind": "concall_transcript", "label": "Q2 FY27 earnings-call transcript (sample)"}, "note": "constant-currency growth can't be derived from INR-reported figures (target shown in %)", "label": "Constant-currency revenue growth"}], "ledger_read": "Conservative targets, consistently met or beaten, and the FY27 operating-margin band is on track year to date. The constant-currency growth guidance (now raised) can't be checked from INR-reported tables, so it is shown unscored.", "ledger": {"as_of": "Q2 FY27", "rows": [{"metric": "ebit_margin", "direction": "at_least", "target_low": 20.0, "target_high": null, "horizon": "Q4 FY26", "said_in": "Q3 FY26", "quote": "We expect Q4 operating margin to stay at or above 20%.", "source": {"kind": "concall_transcript", "label": "Q3 FY26 earnings-call transcript (sample)"}, "basis": "quarter", "horizon_end": "Q4 FY26", "quote_verified": null, "id": "cf720e2834dc", "issues": [], "note": "", "label": "", "metric_label": "Operating (EBIT) margin", "target_text": "≥ 20.00%", "evaluation": {"status": "achieved", "actual": 20.1, "actual_period": "Q4 FY26", "interim": null, "reason": "Reported Operating (EBIT) margin for Q4 FY26: 20.10% vs target ≥ 20.00% → achieved."}}, {"metric": "ebit_margin", "direction": "range", "target_low": 20.0, "target_high": 22.0, "horizon": "FY27", "said_in": "Q4 FY26", "quote": "Operating margin guidance for FY27 is 20 to 22%.", "source": {"kind": "concall_transcript", "label": "Q4 FY26 earnings-call transcript (sample)"}, "basis": "full_year", "horizon_end": "Q4 FY27", "quote_verified": null, "id": "10769ef83672", "issues": [], "note": "", "label": "", "metric_label": "Operating (EBIT) margin", "target_text": "20.00%–22.00%", "evaluation": {"status": "in_progress", "actual": null, "actual_period": null, "interim": {"label": "YTD Q1–Q2 FY27", "value": 20.4}, "reason": "Evaluation date Q4 FY27 not reached. Interim YTD Q1–Q2 FY27: 20.40% vs target 20.00%–22.00%."}}, {"metric": "other", "direction": "range", "target_low": 1.0, "target_high": 3.0, "horizon": "FY27", "said_in": "Q4 FY26", "quote": "Our FY27 revenue growth guidance is 1 to 3% in constant currency.", "source": {"kind": "concall_transcript", "label": "Q4 FY26 earnings-call transcript (sample)"}, "basis": "full_year", "horizon_end": "Q4 FY27", "quote_verified": null, "id": "023949bfb992", "issues": ["metric not computable from reported tables"], "note": "constant-currency growth can't be derived from INR-reported figures (target shown in %)", "label": "Constant-currency revenue growth", "metric_label": "Constant-currency revenue growth", "target_text": "1–3", "evaluation": {"status": "not_evaluable", "actual": null, "actual_period": null, "interim": null, "reason": "Not scored: constant-currency growth can't be derived from INR-reported figures (target shown in %)."}}, {"metric": "pat_growth_yoy", "direction": "at_least", "target_low": 5.0, "target_high": null, "horizon": "H1 FY27", "said_in": "Q1 FY27", "quote": "We expect first-half profit growth of at least 5%.", "source": {"kind": "concall_transcript", "label": "Q1 FY27 earnings-call transcript (sample)"}, "basis": "half", "horizon_end": "Q2 FY27", "quote_verified": null, "id": "3d34898afe90", "issues": [], "note": "", "label": "", "metric_label": "PAT growth YoY", "target_text": "≥ 5.00%", "evaluation": {"status": "exceeded", "actual": 6.26, "actual_period": "H1 FY27", "interim": null, "reason": "Reported PAT growth YoY for H1 FY27: 6.26% vs target ≥ 5.00% → exceeded."}}, {"metric": "revenue_growth_yoy", "direction": "at_least", "target_low": 3.0, "target_high": null, "horizon": "Q2 FY27", "said_in": "Q1 FY27", "quote": "We expect second-quarter revenue to grow at least 3% year on year.", "source": {"kind": "concall_transcript", "label": "Q1 FY27 earnings-call transcript (sample)"}, "basis": "quarter", "horizon_end": "Q2 FY27", "quote_verified": null, "id": "6863f382cd02", "issues": [], "note": "", "label": "", "metric_label": "Revenue growth YoY", "target_text": "≥ 3.00%", "evaluation": {"status": "exceeded", "actual": 4.69, "actual_period": "Q2 FY27", "interim": null, "reason": "Reported Revenue growth YoY for Q2 FY27: 4.69% vs target ≥ 3.00% → exceeded."}}, {"metric": "other", "direction": "range", "target_low": 3.5, "target_high": 4.5, "horizon": "FY27", "said_in": "Q2 FY27", "quote": "We are raising FY27 constant-currency growth guidance to 3.5 to 4.5%.", "source": {"kind": "concall_transcript", "label": "Q2 FY27 earnings-call transcript (sample)"}, "basis": "full_year", "horizon_end": "Q4 FY27", "quote_verified": null, "id": "f486f17e2ca6", "issues": ["metric not computable from reported tables"], "note": "constant-currency growth can't be derived from INR-reported figures (target shown in %)", "label": "Constant-currency revenue growth", "metric_label": "Constant-currency revenue growth", "target_text": "3.5–4.5", "evaluation": {"status": "not_evaluable", "actual": null, "actual_period": null, "interim": null, "reason": "Not scored: constant-currency growth can't be derived from INR-reported figures (target shown in %)."}}], "counts": {"exceeded": 2, "achieved": 1, "missed": 0, "in_progress": 1, "pending": 0, "not_evaluable": 2}, "delivery_rate": 100, "resolved": 3, "series_source": {"kind": "sample", "label": "Illustrative sample data", "would_be": "Screener.in quarterly table"}, "method": "LLM extracts commitments and quotes; verdicts are computed by commitments.evaluate() against reported quarterly figures for the stated horizon.", "read": "Conservative targets, consistently met or beaten, and the FY27 operating-margin band is on track year to date. The constant-currency growth guidance (now raised) can't be checked from INR-reported tables, so it is shown unscored."}}}}/*__END__*/;
+let NOW = new Date(DATA.meta.served_at || DATA.meta.generated_at);
+const LIVE = {reachable:false, at:null};
+
+/* ============ storage (every access guarded: private mode / blocked storage) ============ */
+const store = {
+  get(k, d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
+  del(k){ try{ localStorage.removeItem(k); }catch(e){} }
+};
+
+/* ============ escaping & validation ============ */
+const ESC = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'};
+function esc(v){ return v==null ? '' : String(v).replace(/[&<>"'`]/g, c=>ESC[c]); }
+const TICKER_RE = /^[A-Z0-9][A-Z0-9&\-]{0,19}$/;
+function validTicker(t){ return typeof t==='string' && TICKER_RE.test(t); }
+const DOC_HOSTS = new Set(['nsearchives.nseindia.com','archives.nseindia.com','www.nseindia.com','www.bseindia.com','bseindia.com','www.screener.in']);
+function safeUrl(u){
+  if(!u) return null;
+  if(!/^https?:/.test(u) && (!/^[\w./-]+$/.test(u) || u.includes('..'))) return null;   // plain archive paths only
+  try{ const x = new URL(u.startsWith('http')?u:'https://nsearchives.nseindia.com/corporate/'+u.replace(/^\/+/,''));
+       return x.protocol==='https:' && DOC_HOSTS.has(x.hostname) ? x.href : null; }
+  catch(e){ return null; }
+}
+const num = v => typeof v==='number' && isFinite(v);
+
+/* ============ preferences (persisted) ============ */
+const DEF = DATA.default_thresholds;
+const saved = store.get('finn-prefs', {});
+const state = {
+  view:'today', tv:'feed', window: saved.window || 24,
+  thresh:{ vol_ratio: num(saved.vol_ratio)?saved.vol_ratio:DEF.vol_ratio,
+           price_move_pct: num(saved.price_move_pct)?saved.price_move_pct:DEF.price_move_pct,
+           watched: new Set(Array.isArray(saved.watched)?saved.watched:DEF.watched_categories) },
+  research:null, loading:null, mod:'ledger',
+  stock:null, st:'ov', rng:'3mo',
+  sort:{k:'move', dir:-1}, showDismissed:false, from:null
+};
+function savePrefs(){ const t=state.thresh;
+  store.set('finn-prefs', {vol_ratio:t.vol_ratio, price_move_pct:t.price_move_pct, watched:[...t.watched], window:state.window}); }
+
+(function initTheme(){ const t = store.get('finn-theme', null);
+  document.documentElement.dataset.theme = t || (matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'); })();
+
+/* "since last visit": filings whose id wasn't seen on the previous visit */
+const SEEN_KEY='finn-seen';
+let PREV_SEEN = store.get(SEEN_KEY, null);          // null = first visit
+function markAllSeen(){ store.set(SEEN_KEY, DATA.announcements.map(a=>a.id)); PREV_SEEN = new Set(DATA.announcements.map(a=>a.id)); }
+PREV_SEEN = PREV_SEEN ? new Set(PREV_SEEN) : null;
+const isNew = a => PREV_SEEN!==null && !PREV_SEEN.has(a.id);
+addEventListener('pagehide', ()=>store.set(SEEN_KEY, DATA.announcements.map(a=>a.id)));
+
+/* ============ taxonomy ============ */
+const CAT_LABEL = {results:'Results','M&A':'M&A',fund_raise:'Fund raise',management_change:'Management change',
+  litigation:'Litigation / regulatory',insider_trading:'Insider trading',earnings_call:'Earnings call',
+  investor_meetings:'Investor meetings',credit_rating:'Credit rating',dividend:'Dividend',bonus_split:'Bonus / split',
+  capex:'Capex',press_release:'Press release',postal_ballot:'Postal ballot',agm_egm:'AGM / EGM',pledging:'Pledging',
+  unclassified:'Routine'};
+const catLabel = c => CAT_LABEL[c] || esc(c);
+/* Base materiality of each filing type (0–40). Explained to the user item by item. */
+const CAT_WEIGHT = {results:40,'M&A':38,management_change:34,fund_raise:32,litigation:34,credit_rating:24,pledging:24,
+  capex:20,press_release:14,insider_trading:10,earnings_call:10,dividend:8,bonus_split:8,investor_meetings:5,
+  agm_egm:3,postal_ballot:3,unclassified:0};
+const PRIO = {high:0,medium:1,low:2,routine:3};
+const PRIO_LABEL = {high:'Needs attention',medium:'Worth a look',low:'For information',routine:'Routine'};
+
+/* ============ helpers ============ */
+const $ = (s,el=document)=>el.querySelector(s);
+const port = tk => DATA.portfolio.find(p=>p.ticker===tk);
+const nameOf = tk => (port(tk)||DATA.adhoc_universe.find(p=>p.ticker===tk)||{}).name || tk;
+function inr(n,d=0){ return num(n) ? n.toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d}) : 'n/a'; }
+function fmtCr(n){ if(!num(n)) return 'n/a'; if(n>=100000) return '₹'+(n/100000).toFixed(2)+' lakh cr'; return '₹'+inr(n)+' cr'; }
+function signed(n,d=1,u='%'){ return num(n) ? (n>0?'+':n<0?'−':'')+Math.abs(n).toFixed(d)+u : 'n/a'; }
+function cls(n){ return !num(n)||n===0?'':n>0?'pos':'neg'; }
+function pctChg(cur,base){ return num(cur)&&num(base)&&base>0 ? (cur-base)/base*100 : null; }   // n.m. from non-positive base
+function ago(iso){ const d=(NOW-new Date(iso))/1000; if(!isFinite(d)) return '';
+  if(d<3600) return Math.max(1,Math.round(d/60))+'m ago'; if(d<86400) return Math.round(d/3600)+'h ago'; return Math.round(d/86400)+'d ago'; }
+function fmtTime(iso){ try{ return new Date(iso).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Kolkata'})+' IST'; }catch(e){ return ''; } }
+const inWindow = (iso,h) => (NOW-new Date(iso))/3600000 <= h + 0.01;
+function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2400); }
+function srcText(s){ if(!s) return ''; const kinds={screener_table:'Screener.in table · secondary',concall_transcript:'Concall transcript',
+  annual_report:'Annual report',quarterly_results:'Results filing',sample:'Sample'};
+  return `<div class="src">Source: <b>${esc(kinds[s.kind]||s.kind)}</b>${s.label?' — '+esc(s.label):''}${s.page?', p.'+esc(s.page):''}${s.note?' · '+esc(s.note):''}</div>`; }
+
+/* ============ materiality: explainable score ============ */
+function materiality(a){
+  const f=[]; const t=state.thresh; const p=port(a.ticker)||{};
+  f.push([`${catLabel(a.category)} filing`, CAT_WEIGHT[a.category] ?? 10]);
+  if(t.watched.has(a.category)) f.push(['In your watched categories',15]);
+  if(num(p.chg_pct)){ const m=Math.abs(p.chg_pct);
+    if(m>=t.price_move_pct) f.push([`Stock ${signed(p.chg_pct)} today, past your ±${t.price_move_pct.toFixed(1)}% line`,20]);
+    else if(m>=t.price_move_pct/2) f.push([`Stock ${signed(p.chg_pct)} today`,8]); }
+  if(num(p.vol_ratio) && p.vol_ratio>=t.vol_ratio) f.push([`Volume ${p.vol_ratio.toFixed(1)}× its 20-day average`,15]);
+  if(a.results){ const pr=a.results.rows.find(r=>r.metric==='PAT'); const y=pr?pctChg(pr.values[2],pr.values[0]):null;
+    if(num(y)&&Math.abs(y)>=15) f.push([`PAT ${signed(y,0)} year on year`,10]); }
+  if(a.priority==='routine') return {score:Math.min(10,f.reduce((s,x)=>s+x[1],0)), f};
+  return {score:Math.min(100,f.reduce((s,x)=>s+x[1],0)), f};
+}
+
+/* ============ source status ============ */
+function sourceState(){
+  const s=(DATA.meta.sources)||{}; const st=[s.prices?.state, s.announcements?.state];
+  if(st.every(x=>x==='live')) return {c:'live', t:'Live · '+(LIVE.at||'')};
+  if(st.every(x=>!x||x==='sample'||x==='failed')) return {c:st.includes('failed')?'failed':'', t: st.includes('failed')?'Sample · refresh failed':'Sample data'};
+  if(st.includes('stale')) return {c:'stale', t:'Stale data'};
+  return {c:'partial', t:'Partly live'};
+}
+
+/* ============ NAV ============ */
+const ICON={today:'<path d="M4 5h16M4 10h16M4 15h10M4 20h7"/>',
+  alerts:'<path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>',
+  research:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  portfolio:'<path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/>',
+  settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>'};
+const NAV=[['today','Today'],['portfolio','Portfolio'],['research','Research'],['alerts','Alerts'],['settings','Settings']];
+function renderNav(){
+  const n=unreadAlerts(); const cur = state.view==='stock'?'portfolio':state.view;
+  $('#tabs').innerHTML = NAV.map(([id,l])=>`<button class="tab ${cur===id?'on':''}" data-act="go" data-v="${id}" aria-label="${l}">
+    ${id==='alerts'&&n?`<span class="bdg">${n}</span>`:''}<svg viewBox="0 0 24 24">${ICON[id]}</svg>${l}</button>`).join('');
+  const ss=sourceState();
+  $('#rail').innerHTML = `<div class="brand"><b>FINN</b><span>Research desk</span></div>
+    <div class="rnav">${NAV.map(([id,l])=>`<button class="${cur===id?'on':''}" data-act="go" data-v="${id}"><svg viewBox="0 0 24 24">${ICON[id]}</svg>${l}${id==='alerts'&&n?`<span class="cnt">${n}</span>`:''}</button>`).join('')}</div>
+    <div class="railfoot"><button class="status ${ss.c}" data-act="refresh" title="Refresh"><i></i>${esc(ss.t)}</button>
+      <div style="margin-top:10px">${DATA.portfolio.length} holdings · NSE</div>
+      <button class="ib" style="margin-top:10px" data-act="theme">${document.documentElement.dataset.theme==='light'?'Dark theme':'Light theme'}</button></div>`;
+}
+function go(v){ state.view=v; if(v!=='research'){ state.research=null; } if(v!=='stock') state.stock=null; render(); scrollTo(0,0); }
+
+/* ============ TODAY ============ */
+function windowed(){ return DATA.announcements.filter(a=>inWindow(a.time,state.window)); }
+function renderToday(){
+  const items=windowed().map(a=>({...a,_m:materiality(a)}))
+    .sort((a,b)=>PRIO[a.priority]-PRIO[b.priority] || b._m.score-a._m.score || new Date(b.time)-new Date(a.time));
+  const groups={high:[],medium:[],low:[],routine:[]}; items.forEach(a=>(groups[a.priority]||groups.low).push(a));
+  const W=[[24,'24h'],[48,'48h'],[168,'7d'],[9999,'All']];
+  let h = briefHTML(items) + `<div class="bar">
+    <div class="seg" role="tablist">${[['feed','Feed'],['radar','Radar'],['time','Timeline']].map(([k,l])=>`<button class="${state.tv===k?'on':''}" data-act="tv" data-v="${k}">${l}</button>`).join('')}</div>
+    <span class="sp"></span>
+    <div class="seg">${W.map(([v,l])=>`<button class="${state.window===v?'on':''}" data-act="window" data-v="${v}">${l}</button>`).join('')}</div></div>`;
+  if(state.tv==='radar') return h+radarHTML(items);
+  if(state.tv==='time') return h+timelineHTML(items);
+  if(!items.length) return h+`<div class="empty">No filings in this window. Widen it to see more.</div>`;
+  for(const k of ['high','medium','low']){ if(!groups[k].length) continue;
+    h+=`<div class="h2"><h2>${PRIO_LABEL[k]}</h2><span class="m">${groups[k].length}</span></div>`+groups[k].map(annItem).join(''); }
+  if(groups.routine.length){
+    h+=`<div class="h2"><h2>Routine</h2><span class="m"><button class="ib" data-act="toggle-routine">${state.showRoutine?'Hide':'Show'} ${groups.routine.length}</button></span></div>`;
+    if(state.showRoutine) h+=groups.routine.map(annItem).join('');
+  }
+  return h+`<div class="foot">Ranked by priority, then by materiality score. Open an item to see why it scored as it did.</div>`;
+}
+function briefHTML(items){
+  const P=DATA.portfolio, t=state.thresh; const up=P.filter(p=>p.chg_pct>0).length, dn=P.filter(p=>p.chg_pct<0).length;
+  const moves=P.map(p=>p.chg_pct).filter(num).sort((a,b)=>a-b); const med=moves.length?moves[Math.floor(moves.length/2)]:null;
+  const hi=items.filter(a=>a.priority==='high'); const top=[...P].sort((a,b)=>Math.abs(b.chg_pct)-Math.abs(a.chg_pct))[0];
+  const vol=P.filter(p=>p.vol_ratio>=t.vol_ratio); const nw=DATA.announcements.filter(isNew).length;
+  const cats=[...new Set(hi.map(a=>catLabel(a.category)))].slice(0,3).join(', ');
+  const S=DATA.meta.sources||{}; const fresh=k=>{ const x=S[k]||{}; return x.state==='live'||x.state==='partial' ? `${x.state==='partial'?'partly live':'live'}, ${fmtTime(x.as_of)}` : x.state==='stale' ? `stale since ${fmtTime(x.as_of)}` : `sample${x.state==='failed'?' (refresh failed)':''}`; };
+  return `<section class="brief"><div class="d">Filings: ${esc(fresh('announcements'))} · Prices: ${esc(fresh('prices'))} · ${state.window>=9999?'all filings':'last '+(state.window>=168?'7 days':state.window+'h')}</div>
+   <p>${hi.length?`<b>${hi.length} filing${hi.length>1?'s':''}</b> need attention${cats?' ('+esc(cats)+')':''}. `:'Nothing material in this window. '}
+   ${up} holdings advanced, ${dn} declined; median move ${signed(med,2)}.
+   ${top?`Largest move: <b>${esc(top.ticker)}</b> <span class="${cls(top.chg_pct)}">${signed(top.chg_pct)}</span>.`:''}
+   ${vol.length?` Unusual volume in ${vol.map(v=>'<b>'+esc(v.ticker)+'</b>').join(', ')}.`:''}</p>
+   <div class="stats"><div><div class="n num ${hi.length?'neg':''}">${hi.length}</div><div class="l">need attention</div></div>
+   <div><div class="n num">${PREV_SEEN===null?'—':nw}</div><div class="l">${PREV_SEEN===null?'first visit':'new since last visit'}${nw?` · <a href="#" data-act="seen">mark seen</a>`:''}</div></div>
+   <div><div class="n num ${unreadAlerts()?'warn':''}">${unreadAlerts()}</div><div class="l">open alerts</div></div></div></section>`;
+}
+function annItem(a){
+  const m=a._m||materiality(a); const url=safeUrl(a.attachment);
+  let extra=''; if(a.results) extra=resultsTable(a.results); if(a.management_change) extra=personCard(a.management_change);
+  return `<article class="item ${a.priority==='high'?'hi':''}" data-act="open-item" tabindex="0">
+    <div class="r1"><span class="tk">${esc(a.ticker)}</span><span class="nm">${esc(a.name)}</span>
+      <span class="tag">${catLabel(a.category)}</span>${isNew(a)?'<span class="new">NEW</span>':''}
+      <span class="t" title="${esc(fmtTime(a.time))}">${esc(ago(a.time))}</span></div>
+    <div class="s">${esc(a.summary)}</div>
+    ${a.priority!=='routine'?`<div class="why">Materiality ${m.score} · ${esc(m.f.slice(0,2).map(x=>x[0]).join(' · '))}</div>`:''}
+    <div class="det"><div>${esc(a.title)}</div>${a.detail||a.body?`<p style="margin:8px 0 0">${esc(a.detail||a.body)}</p>`:''}
+      ${a.priority!=='routine'?`<div class="mat">${m.f.map(([l,w])=>`<span>${esc(l)}</span><span class="num">+${w}</span>`).join('')}<span class="tot">Materiality score</span><span class="tot num">${m.score}</span></div>`:''}
+      ${extra}
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        ${port(a.ticker)?`<button class="btn q sm" data-act="stock" data-tk="${esc(a.ticker)}">Open ${esc(a.ticker)}</button>`:''}
+        <button class="btn q sm" data-act="research" data-tk="${esc(a.ticker)}">Research</button>
+        ${url?`<a class="btn q sm" style="text-decoration:none" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Original filing ↗</a>`:''}</div></div>
+  </article>`;
+}
+function resultsTable(r){
+  const [qY,qQ,qC]=r.quarters.map(esc);
+  const d=(c,b)=>{ const p=pctChg(c,b); return `<span class="${cls(p)}">${p==null?'n.m.':signed(p)}</span>`; };
+  let rows=r.rows.map(x=>{ const [y,q,c]=x.values; return `<tr><td>${esc(x.metric)}</td><td>${inr(y)}</td><td>${inr(q)}</td><td><b>${inr(c)}</b></td><td>${d(c,q)}</td><td>${d(c,y)}</td></tr>`; }).join('');
+  if(r.ebitda_margin){ const m=r.ebitda_margin; const pp=(a,b)=>`<span class="${cls(a-b)}">${signed(a-b,2,' pp')}</span>`;
+    rows+=`<tr><td>EBITDA margin</td><td>${m[0].toFixed(2)}%</td><td>${m[1].toFixed(2)}%</td><td><b>${m[2].toFixed(2)}%</b></td><td>${pp(m[2],m[1])}</td><td>${pp(m[2],m[0])}</td></tr>`; }
+  const rec=r.reconciliation||{};
+  const recT = rec.status==='matched'?'<span class="tag pos">Reconciled to filing</span>':rec.status==='mismatch'?'<span class="tag neg">Differs from filing</span>':'<span class="tag">Not reconciled</span>';
+  return `<div class="tblwrap"><table class="t"><tr><th>₹ crore</th><th>${qY}</th><th>${qQ}</th><th>${qC}</th><th>QoQ</th><th>YoY</th></tr>${rows}</table></div>
+    <div class="src">${recT} ${r.basis==='lender'?'· Lender basis: NII instead of EBITDA · ':''}${esc(rec.reason||'')}</div>${srcText(r.source)}`;
+}
+function personCard(m){ const p=m.person||{};
+  return `<div class="person"><b>${esc(p.name)}</b> · incoming ${esc(m.role)}<div class="small" style="margin-top:2px">${esc(p.headline)}</div>
+    <p class="small" style="margin:6px 0 0">${esc(p.bio)}</p>${m.replacing?`<p class="small faint" style="margin:4px 0 0">${esc(m.replacing)}</p>`:''}
+    <div class="src">Public professional background — push-side enrichment, not used in Pull research.</div></div>`; }
+
+function radarHTML(items){
+  const P=DATA.portfolio,W=640,H=340,pd=36,T=state.thresh, xr=[-6,6], ymn=0.5, ymx=Math.max(2.6,...P.map(p=>p.vol_ratio||0))*1.1;
+  const X=v=>pd+(Math.max(xr[0],Math.min(xr[1],v))-xr[0])/(xr[1]-xr[0])*(W-2*pd), Y=v=>H-pd-(Math.min(ymx,Math.max(ymn,v))-ymn)/(ymx-ymn)*(H-2*pd);
+  const cnt={}; items.forEach(a=>{ if(a.priority!=='routine') cnt[a.ticker]=(cnt[a.ticker]||0)+1; });
+  const grid=[-6,-4,-2,0,2,4,6].map(v=>`<line x1="${X(v)}" x2="${X(v)}" y1="${pd}" y2="${H-pd}" stroke="var(--line)"/><text x="${X(v)}" y="${H-pd+14}" font-size="10" fill="var(--faint)" text-anchor="middle">${v>0?'+':''}${v}%</text>`).join('')
+    +[1,2,3].filter(v=>v<ymx).map(v=>`<line x1="${pd}" x2="${W-pd}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${pd-6}" y="${Y(v)+3}" font-size="10" fill="var(--faint)" text-anchor="end">${v}×</text>`).join('');
+  const dots=P.map(p=>{ const n=cnt[p.ticker]||0,c=p.chg_pct>=0?'var(--pos)':'var(--neg)',cx=X(p.chg_pct),cy=Y(p.vol_ratio),r=n?6:4.5;
+    const lab=n||Math.abs(p.chg_pct)>=T.price_move_pct/2||p.vol_ratio>=T.vol_ratio;
+    return `<g data-act="stock" data-tk="${esc(p.ticker)}" style="cursor:pointer"><circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}" fill-opacity="${n?.9:.45}"/>${lab?`<text x="${cx+8}" y="${cy+3.5}" font-size="10.5" fill="var(--text)" font-family="var(--mono)">${esc(p.ticker)}${n?' ·'+n:''}</text>`:''}</g>`; }).join('');
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Day move versus volume multiple">${grid}
+    <line x1="${pd}" x2="${W-pd}" y1="${Y(T.vol_ratio)}" y2="${Y(T.vol_ratio)}" stroke="var(--warn)" stroke-dasharray="4 3"/>
+    <line x1="${X(T.price_move_pct)}" x2="${X(T.price_move_pct)}" y1="${pd}" y2="${H-pd}" stroke="var(--warn)" stroke-dasharray="4 3"/>
+    <line x1="${X(-T.price_move_pct)}" x2="${X(-T.price_move_pct)}" y1="${pd}" y2="${H-pd}" stroke="var(--warn)" stroke-dasharray="4 3"/>
+    <text x="${W-pd}" y="${pd-10}" font-size="10" fill="var(--faint)" text-anchor="end">volume ÷ 20-day average ↑ · day move →</text>${dots}</svg></div>
+    <div class="foot" style="margin-top:6px">Dashed lines are your alert thresholds. Solid dots have material filings in the window (count shown). Select a dot to open the stock.</div>`;
+}
+function timelineHTML(items){
+  const nr=items.filter(a=>a.priority!=='routine').sort((a,b)=>new Date(b.time)-new Date(a.time));
+  if(!nr.length) return `<div class="empty">No material filings in this window.</div>`;
+  let day=''; return nr.map(a=>{ const d=new Date(a.time).toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',timeZone:'Asia/Kolkata'});
+    const hd=d!==day?`<div class="h2"><h2>${esc(d)}</h2></div>`:''; day=d;
+    return hd+`<div class="item" data-act="${port(a.ticker)?'stock':'research'}" data-tk="${esc(a.ticker)}"><div class="r1"><span class="tk">${esc(a.ticker)}</span><span class="tag">${catLabel(a.category)}</span>
+      <span class="t">${esc(new Date(a.time).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Kolkata'}))}</span></div><div class="s">${esc(a.summary)}</div></div>`; }).join('');
+}
+
+/* ============ ALERTS ============ */
+const AKEY='finn-alert-state';
+let ASTATE = store.get(AKEY, {});
+const EVENT_WINDOW_H = 72;
+function computeAlerts(){
+  const out=[]; const t=state.thresh;
+  DATA.portfolio.forEach(p=>{ const day=p.as_of||String(DATA.meta.generated_at).slice(0,10);
+    if(num(p.chg_pct)&&Math.abs(p.chg_pct)>=t.price_move_pct) out.push({key:`price:${p.ticker}:${day}`,type:'price',ticker:p.ticker,
+      title:`${p.name} closed ${signed(p.chg_pct)}`, why:`Daily move of ${signed(p.chg_pct)} is beyond your ±${t.price_move_pct.toFixed(1)}% threshold.`,
+      val:signed(p.chg_pct), vc:cls(p.chg_pct)});
+    if(num(p.vol_ratio)&&p.vol_ratio>=t.vol_ratio) out.push({key:`vol:${p.ticker}:${day}`,type:'volume',ticker:p.ticker,
+      title:`${p.name}: volume ${p.vol_ratio.toFixed(1)}× normal`, why:`${inr(p.volume)} shares traded vs a 20-day average of ${inr(p.avg_vol_20d)} — above your ${t.vol_ratio.toFixed(1)}× threshold.`,
+      val:p.vol_ratio.toFixed(1)+'×', vc:'warn'});
+  });
+  // Corporate events: the user's category selection decides; priority only informs the explanation.
+  DATA.announcements.forEach(a=>{
+    if(t.watched.has(a.category) && inWindow(a.time,EVENT_WINDOW_H)) out.push({key:`event:${a.id}`,type:'event',ticker:a.ticker,
+      title:`${a.name}: ${catLabel(a.category)}`, why:`${catLabel(a.category)} is one of your watched categories · rated ${a.priority} materiality. ${a.summary}`,
+      val:'', vc:'', time:a.time}); });
+  return out;
+}
+function alertStatus(k){ const s=ASTATE[k]; if(!s) return 'open'; if(s.s==='snoozed' && Date.now()>s.until) return 'open'; return s.s; }
+function unreadAlerts(){ return computeAlerts().filter(a=>alertStatus(a.key)==='open').length; }
+function setAlert(k,s){ if(s==='open') delete ASTATE[k]; else ASTATE[k]={s, until: s==='snoozed'?Date.now()+86400000:0}; store.set(AKEY,ASTATE); render(); }
+function renderAlerts(){
+  const t=state.thresh, all=computeAlerts(); const cats=Object.keys(CAT_LABEL);
+  let h=`<div class="grid2"><div>`;
+  const sec=[['price','Price moves'],['volume','Unusual volume'],['event','Corporate events']];
+  let hidden=0;
+  for(const [ty,lab] of sec){
+    const list=all.filter(a=>a.type===ty); const vis=list.filter(a=>{ const s=alertStatus(a.key); if(s==='dismissed'||s==='snoozed'){ hidden++; return state.showDismissed; } return true; });
+    h+=`<div class="h2"><h2>${lab}</h2><span class="m">${list.filter(a=>alertStatus(a.key)==='open').length} open</span></div>`;
+    if(!vis.length){ h+=`<div class="small faint" style="padding:8px 0">${list.length?'All handled.':'Nothing crosses your threshold.'}</div>`; continue; }
+    h+=vis.map(a=>{ const s=alertStatus(a.key);
+      return `<div class="al ${s!=='open'?'read':''}"><div class="b"><div class="ti">${esc(a.title)}${s!=='open'?` <span class="tag">${esc(s)}</span>`:''}</div>
+        <div class="wy">${esc(a.why)}</div>
+        <div class="acts"><button class="ib" data-act="${port(a.ticker)?'stock':'research'}" data-tk="${esc(a.ticker)}">Open</button>
+          ${s==='open'?`<button class="ib" data-act="alert" data-k="${esc(a.key)}" data-s="read">Mark read</button><button class="ib" data-act="alert" data-k="${esc(a.key)}" data-s="snoozed">Snooze 24h</button><button class="ib" data-act="alert" data-k="${esc(a.key)}" data-s="dismissed">Dismiss</button>`
+                       :`<button class="ib" data-act="alert" data-k="${esc(a.key)}" data-s="open">Restore</button>`}</div></div>
+        ${a.val?`<div class="v num ${a.vc}">${esc(a.val)}</div>`:''}</div>`; }).join('');
+  }
+  if(hidden) h+=`<div style="margin-top:12px"><button class="ib" data-act="show-dismissed">${state.showDismissed?'Hide':'Show'} ${hidden} snoozed / dismissed</button></div>`;
+  h+=`</div><aside><div class="panel"><h2 style="font-size:14px;margin:0 0 2px">Thresholds</h2><div class="small muted">Saved on this device. Alerts update when you release a slider.</div>
+    <div class="ctl"><div class="lab"><span>Volume ≥ multiple of 20-day average</span><output id="o-vol">${t.vol_ratio.toFixed(1)}×</output></div>
+      <input type="range" min="1" max="5" step="0.1" value="${t.vol_ratio}" data-thresh="vol_ratio" aria-label="Volume threshold"></div>
+    <div class="ctl"><div class="lab"><span>Daily price move ≥ ±</span><output id="o-px">${t.price_move_pct.toFixed(1)}%</output></div>
+      <input type="range" min="1" max="10" step="0.5" value="${t.price_move_pct}" data-thresh="price_move_pct" aria-label="Price move threshold"></div>
+    <div class="small" style="margin-bottom:6px">Corporate events I want alerts for <span class="faint">(last ${EVENT_WINDOW_H}h)</span></div>
+    <div class="cats">${cats.filter(c=>c!=='unclassified').map(c=>`<button class="cat ${t.watched.has(c)?'on':''}" data-act="cat" data-v="${esc(c)}" aria-pressed="${t.watched.has(c)}">${catLabel(c)}</button>`).join('')}</div>
+    </div><div class="foot">Every watched category alerts, whatever its priority. Price and volume use end-of-day data.</div></aside></div>`;
+  return h;
+}
+
+/* ============ PORTFOLIO ============ */
+function filingsCount(tk){ return DATA.announcements.filter(a=>a.ticker===tk&&a.priority!=='routine'&&inWindow(a.time,168)).length; }
+function renderPortfolio(){
+  const t=state.thresh, S=state.sort;
+  const key={tk:p=>p.ticker,price:p=>p.price,move:p=>p.chg_pct,vol:p=>p.vol_ratio,sector:p=>p.sector,fil:p=>filingsCount(p.ticker)}[S.k];
+  const rows=[...DATA.portfolio].sort((a,b)=>{ const x=key(a),y=key(b); return (typeof x==='string'?x.localeCompare(y):(x-y))*S.dir; });
+  const flagged=DATA.portfolio.filter(p=>p.vol_ratio>=t.vol_ratio||Math.abs(p.chg_pct)>=t.price_move_pct).length;
+  const th=(k,l,c='')=>`<th class="${c}" data-act="sort" data-v="${k}" aria-sort="${S.k===k?(S.dir>0?'ascending':'descending'):'none'}">${l}${S.k===k?(S.dir>0?' ↑':' ↓'):''}</th>`;
+  const stale = DATA.meta.sources?.prices?.state;
+  let h=`<div class="kv" style="margin-bottom:6px"><div><div class="k">Holdings</div><div class="v num">${DATA.portfolio.length}</div></div>
+    <div><div class="k">Sectors</div><div class="v num">${new Set(DATA.portfolio.map(p=>p.sector.split(' / ')[0])).size}</div></div>
+    <div><div class="k">Advancing / declining</div><div class="v num"><span class="pos">${DATA.portfolio.filter(p=>p.chg_pct>0).length}</span> / <span class="neg">${DATA.portfolio.filter(p=>p.chg_pct<0).length}</span></div></div>
+    <div><div class="k">Flagged today</div><div class="v num ${flagged?'warn':''}">${flagged}</div></div></div>
+  <div class="grid2"><div>
+  <div class="h2"><h2>Holdings</h2><span class="m">${stale==='live'?'end of day · live':stale==='partial'?'some prices not refreshed':'sample snapshot'}</span></div>
+  <div class="tblwrap"><table class="h"><thead><tr>${th('tk','Company','l')}${th('sector','Sector','l hm')}${th('price','Price')}${th('move','Day')}${th('vol','Vol ×')}${th('fil','Filings 7d','hm')}</tr></thead><tbody>
+  ${rows.map(p=>`<tr data-act="stock" data-tk="${esc(p.ticker)}"><td class="l"><span class="tk">${esc(p.ticker)}</span>${p.live===false?' <span class="tag warn" title="Price not refreshed">stale</span>':''}<span class="nm">${esc(p.name)}</span></td>
+    <td class="l hm small muted">${esc(p.sector)}</td><td>₹${inr(p.price,2)}</td><td class="${cls(p.chg_pct)}">${signed(p.chg_pct,2)}</td>
+    <td class="${p.vol_ratio>=t.vol_ratio?'warn':''}">${num(p.vol_ratio)?p.vol_ratio.toFixed(2):'n/a'}</td><td class="hm">${filingsCount(p.ticker)||'–'}</td></tr>`).join('')}
+  </tbody></table></div></div>
+  <aside><div class="h2"><h2>Day move map</h2><span class="m">EOD</span></div>${heatHTML()}
+  <div class="src">Tile size = company market capitalisation, not your position size.</div>
+  <div class="h2"><h2>Sector average move</h2></div>${sectorHTML()}</aside></div>`;
+  return h;
+}
+function heatHTML(){ const P=[...DATA.portfolio].sort((a,b)=>b.mcap_cr-a.mcap_cr);
+  return `<div class="heat">`+P.map(p=>{ const a=Math.min(1,Math.abs(p.chg_pct)/4); const c=p.chg_pct>=0?`rgba(93,174,139,${.12+a*.5})`:`rgba(209,106,95,${.12+a*.5})`;
+    const f=Math.max(1,Math.sqrt(p.mcap_cr/40000)); return `<div class="tile" style="flex:${f.toFixed(2)} 1 ${Math.round(f*14)}px;background:${c}" data-act="stock" data-tk="${esc(p.ticker)}" title="${esc(p.name)}"><b>${esc(p.ticker)}</b><span>${signed(p.chg_pct)}</span></div>`; }).join('')+`</div>`; }
+function sectorHTML(){ const g={}; DATA.portfolio.forEach(p=>{ const k=p.sector.split(' / ')[0]; (g[k]=g[k]||[]).push(p); });
+  return Object.entries(g).map(([k,a])=>({k,v:a.reduce((x,p)=>x+p.chg_pct,0)/a.length})).sort((a,b)=>b.v-a.v).map(({k,v})=>{ const w=Math.min(50,Math.abs(v)*12);
+    return `<div class="sec"><span class="small">${esc(k)}</span><div class="tr"><u></u><i style="${v>=0?'left:50%':'right:50%'};width:${w}%;background:${v>=0?'var(--pos)':'var(--neg)'}"></i></div><span class="num small ${cls(v)}" style="text-align:right">${signed(v,2)}</span></div>`; }).join(''); }
+
+/* ============ STOCK ============ */
+const HIST={};
+async function getHist(tk,r){ const k=tk+r; if(HIST[k]) return HIST[k];
+  if(LIVE.reachable){ try{ const res=await fetch(`/api/history/${encodeURIComponent(tk)}?range=${encodeURIComponent(r)}`); const j=await res.json();
+    if(res.ok && Array.isArray(j.c) && j.c.length>1) return HIST[k]=j; }catch(e){} }
+  const p=port(tk); return {t:p.spark.map((_,i)=>i===p.spark.length-1?'latest':`${p.spark.length-1-i} sessions ago`),c:p.spark,v:[],sample:true}; }
+function openStock(tk){ if(!validTicker(tk)||!port(tk)) return; state.stock=tk; state.view='stock'; render(); scrollTo(0,0); }
+function renderStock(){ const p=port(state.stock); if(!p) return '';
+  const t=state.thresh, anns=DATA.announcements.filter(a=>a.ticker===p.ticker).sort((a,b)=>new Date(b.time)-new Date(a.time));
+  const r=DATA.research[p.ticker];
+  let h=`<div class="bar"><button class="btn q sm" data-act="go" data-v="${state.from==='today'?'today':'portfolio'}">‹ Back</button></div>
+  <div class="rhead"><div><div class="tk faint">${esc(p.ticker)}.NS · ${esc(p.sector)}</div><h2>${esc(p.name)}</h2></div></div>
+  <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span class="px num" id="pxv">₹${inr(p.price,2)}</span>
+    <span class="num ${cls(p.chg_pct)}" id="pxc">${signed(p.chg_pct,2)} on the day</span>
+    <span class="sp"></span><div class="seg">${[['1mo','1M'],['3mo','3M'],['6mo','6M'],['1y','1Y']].map(([k,l])=>`<button class="${state.rng===k?'on':''}" data-act="rng" data-v="${k}">${l}</button>`).join('')}</div></div>
+  <div class="chart" id="chart"><div class="empty" style="padding:60px 0"><span class="spin"></span></div></div>
+  <div class="bar" style="margin-top:12px"><div class="seg">${[['ov','Overview'],['tech','Technicals'],['fil','Filings · '+anns.length],['fund','Research']].map(([k,l])=>`<button class="${state.st===k?'on':''}" data-act="st" data-v="${k}">${l}</button>`).join('')}</div></div>`;
+  if(state.st==='ov') h+=`<div class="kv"><div><div class="k">Volume vs 20-day avg</div><div class="v num ${p.vol_ratio>=t.vol_ratio?'warn':''}">${p.vol_ratio.toFixed(2)}×</div></div>
+    <div><div class="k">Volume</div><div class="v num">${(p.volume/1e5).toFixed(1)} lakh</div></div>
+    <div><div class="k">Previous close</div><div class="v num">₹${inr(p.prev_close,2)}</div></div>
+    <div><div class="k">Market cap</div><div class="v num">${fmtCr(p.mcap_cr)}</div></div></div>
+    <div class="note">${p.vol_ratio>=t.vol_ratio?`Volume is above your ${t.vol_ratio.toFixed(1)}× alert line.`:`Volume is within your ${t.vol_ratio.toFixed(1)}× alert line.`}
+    ${Math.abs(p.chg_pct)>=t.price_move_pct?` The day's move exceeds your ±${t.price_move_pct.toFixed(1)}% threshold.`:''}</div>`;
+  if(state.st==='tech') h+=`<div id="tech"></div>`;
+  if(state.st==='fil') h+=anns.length?anns.map(annItem).join(''):`<div class="empty">No filings for ${esc(p.ticker)} in the feed.</div>`;
+  if(state.st==='fund') h+= r ? `<div class="note">${esc(r.ledger?.read||'')}</div>${ledgerSummary(r.ledger)}<button class="btn" style="margin-top:12px" data-act="research" data-tk="${esc(p.ticker)}">Open full research</button>`
+                             : `<div class="empty">No research built for ${esc(p.ticker)} yet.<div style="margin-top:12px"><button class="btn" data-act="research" data-tk="${esc(p.ticker)}">Open research</button></div></div>`;
+  return h;
+}
+async function drawChart(){ const tk=state.stock, rng=state.rng; if(!tk) return; const h=await getHist(tk,rng); const el=$('#chart');
+  if(!el||state.stock!==tk||state.rng!==rng) return;
+  if($('#tech')) $('#tech').innerHTML=techHTML(h);
+  const c=h.c, n=c.length, W=720, H=240, pl=8, pr=52, pt=10, vb=34, mn=Math.min(...c), mx=Math.max(...c), rg=(mx-mn)||1;
+  const x=i=>pl+i/(n-1)*(W-pl-pr), y=v=>pt+(1-(v-mn)/rg)*(H-pt-vb-14);
+  const up=c[n-1]>=c[0], col=up?'var(--pos)':'var(--neg)';
+  const ticks=[mn,mn+rg/2,mx].map(v=>`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${W-pr+6}" y="${y(v)+3}" font-size="10.5" fill="var(--faint)">${inr(v,0)}</text>`).join('');
+  const vm=Math.max(1,...(h.v||[])); const bars=(h.v||[]).map((v,i)=>`<rect x="${x(i)-1}" y="${H-v/vm*vb}" width="2" height="${v/vm*vb}" fill="var(--faint)" opacity=".5"/>`).join('');
+  const ma=state.st==='tech'?[[20,'var(--warn)'],[50,'var(--accent)']].map(([k,cl])=>{ const m=sma(c,k); const pts=m.map((v,i)=>v==null?null:`${x(i)},${y(v)}`).filter(Boolean); return pts.length>1?`<polyline fill="none" stroke="${cl}" stroke-width="1.2" points="${pts.join(' ')}"/>`:''; }).join(''):'';
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Price chart">${ticks}${bars}
+    <polyline points="${c.map((v,i)=>`${x(i)},${y(v)}`).join(' ')}" fill="none" stroke="${col}" stroke-width="1.6" stroke-linejoin="round"/>${ma}
+    <line id="cx" y1="${pt}" y2="${H}" stroke="var(--muted)" stroke-dasharray="2 3" opacity="0"/><circle id="cd" r="3.5" fill="${col}" opacity="0"/></svg>
+    ${h.sample?'<div class="src" style="padding:0 4px 4px">Sample: last 8 closes only. Run the live server for full history.</div>':`<div class="src" style="padding:0 4px 4px">${esc(h.source||'')} · daily close · bars = volume</div>`}`;
+  const svg=el.querySelector('svg'), pv=$('#pxv'), pc=$('#pxc'), p=port(tk);
+  const at=e=>{ const r=svg.getBoundingClientRect(); const i=Math.max(0,Math.min(n-1,Math.round(((e.clientX-r.left)/r.width*W-pl)/(W-pl-pr)*(n-1))));
+    $('#cx').setAttribute('x1',x(i)); $('#cx').setAttribute('x2',x(i)); $('#cx').style.opacity=1; $('#cd').setAttribute('cx',x(i)); $('#cd').setAttribute('cy',y(c[i])); $('#cd').style.opacity=1;
+    pv.textContent='₹'+inr(c[i],2); pc.textContent=`${h.t[i]||''} · ${signed((c[i]-c[0])/c[0]*100)} over range`; pc.className='num '+cls(c[i]-c[0]); };
+  const reset=()=>{ $('#cx').style.opacity=0; $('#cd').style.opacity=0; pv.textContent='₹'+inr(p.price,2); pc.textContent=signed(p.chg_pct,2)+' on the day'; pc.className='num '+cls(p.chg_pct); };
+  svg.addEventListener('pointermove',at); svg.addEventListener('pointerdown',at); svg.addEventListener('pointerleave',reset);
+}
+function sma(c,n){ return c.map((_,i)=>i<n-1?null:c.slice(i-n+1,i+1).reduce((a,b)=>a+b,0)/n); }
+function techHTML(h){ const c=h.c,n=c.length; if(n<3) return '';
+  const r=c.slice(1).map((v,i)=>(v-c[i])/c[i]*100), mean=r.reduce((a,b)=>a+b,0)/r.length, sd=Math.sqrt(r.reduce((a,b)=>a+(b-mean)**2,0)/Math.max(1,r.length-1));
+  const hi=Math.max(...c), lo=Math.min(...c);
+  return `<div class="kv"><div><div class="k">Range position</div><div class="v num">${((c[n-1]-lo)/((hi-lo)||1)*100).toFixed(0)}%</div></div>
+    <div><div class="k">Daily volatility (σ)</div><div class="v num">${sd.toFixed(2)}%</div></div>
+    <div><div class="k">From period high</div><div class="v num ${cls(c[n-1]/hi-1)}">${signed((c[n-1]/hi-1)*100)}</div></div>
+    <div><div class="k">Period return</div><div class="v num ${cls(c[n-1]-c[0])}">${signed((c[n-1]/c[0]-1)*100)}</div></div>
+    <div><div class="k">Up days</div><div class="v num">${r.filter(x=>x>0).length} / ${r.length}</div></div></div>
+    <div class="src">Chart overlays: 20-day (amber) and 50-day (green) simple moving averages where enough history exists. ${h.sample?'Sample history is too short for these to be meaningful.':''}</div>`; }
+
+/* ============ RESEARCH ============ */
+const MODS=[['ledger','Commitment ledger'],['business','Business'],['financials','Financials'],['trajectory','Trajectory'],
+  ['balance','Balance sheet'],['cash','Cash quality'],['bull','Bull / bear']];
+function openResearch(tk){ tk=String(tk||'').toUpperCase().trim(); if(!validTicker(tk)){ if(tk) toast('Not a valid NSE symbol'); return; }
+  state.from=state.view; state.view='research'; state.research=tk; state.mod='ledger'; render(); scrollTo(0,0); }
+function setMod(k){ if(!MODS.some(m=>m[0]===k)) return; state.mod=k; render(); }   // the single module selector
+function renderResearch(){
+  if(state.loading) return `<div class="empty"><span class="spin"></span><div style="margin-top:12px;color:var(--text)">Analysing ${esc(state.loading)}…</div>
+    <div class="small" style="max-width:360px;margin:6px auto 0">Fetching tables and transcripts, extracting commitments, then scoring them against reported figures.</div></div>`;
+  if(!state.research){
+    const uni=[...DATA.portfolio.map(p=>[p.ticker,'portfolio']),...DATA.adhoc_universe.map(p=>[p.ticker,'watchlist'])];
+    return `<form class="search" data-act="search-form" onsubmit="return false"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="rin" placeholder="NSE symbol, e.g. DIXON" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" aria-label="NSE symbol"></form>
+      <div class="small muted" style="margin-top:8px;max-width:620px">Research is grounded in company documents (annual reports, concall transcripts). Figures from Screener.in are labelled as a secondary source. No news or broker notes.</div>
+      <div class="h2"><h2>Full research available</h2></div><div class="unis">${Object.values(DATA.research).map(r=>`<button class="uni" data-act="research" data-tk="${esc(r.ticker)}"><b>${esc(r.ticker)}</b>${esc(r.name)}</button>`).join('')}</div>
+      <div class="h2"><h2>Your universe</h2></div><div class="unis" id="unis">${uni.map(([t,g])=>`<button class="uni" data-act="research" data-tk="${esc(t)}" data-q="${esc(t)}"><b>${esc(t)}</b>${g}</button>`).join('')}</div>`;
+  }
+  const r=DATA.research[state.research]; if(!r) return researchMissing(state.research);
+  const cov=r.coverage||{transcripts:r.sources.filter(s=>s.kind==='concall_transcript').length,annual_report:r.sources.some(s=>s.kind==='annual_report'),quarters:(r.trajectory?.quarters||[]).length,commitments:(r.commitments||[]).length};
+  return `<div class="bar"><button class="btn q sm" data-act="back-research">‹ Back</button><span class="faint small">As of ${esc(r.as_of)}</span></div>
+    <div class="rhead"><div><div class="tk faint">${esc(r.ticker)}.NS${r.sector?' · '+esc(r.sector):''}${r.profile==='lender'?' · lender metrics':''}</div><h2>${esc(r.name)}</h2></div>${r.sample?'<span class="tag warn">Illustrative sample</span>':''}</div>
+    <div class="cov"><span>Evidence: <b>${cov.annual_report?'1':'0'}</b> annual report</span><span><b>${cov.transcripts}</b> concall transcripts</span>
+      <span><b>${cov.quarters}</b> quarters of figures</span><span><b>${cov.commitments}</b> commitments tracked</span></div>
+    <nav class="mods" aria-label="Research modules">${MODS.map(([k,l])=>`<button class="${state.mod===k?'on':''}" data-act="mod" data-v="${k}">${l}</button>`).join('')}</nav>
+    <div class="fade">${renderMod(r)}</div>
+    <div class="foot">${esc(r.grounding_note)}<br>Sources: ${r.sources.map(s=>esc(typeof s==='string'?s:s.label)).join(' · ')}</div>`;
+}
+function ledgerSummary(L){ if(!L||!L.counts) return '';
+  const c=L.counts; const cells=[['exceeded','Exceeded','pos'],['achieved','Achieved','pos'],['missed','Missed','neg'],['in_progress','In progress',''],['pending','Pending',''],['not_evaluable','Not scored','']];
+  return `<div class="lsum">${cells.map(([k,l,cl])=>`<div><div class="n num ${c[k]?cl:''}">${c[k]||0}</div><div class="l">${l}</div></div>`).join('')}</div>
+    <div class="small muted">${L.resolved?`${c.exceeded+c.achieved} of ${L.resolved} commitments that have reached their evaluation date were met or beaten.`:'No commitment has reached its evaluation date yet.'}</div>`; }
+const STATUS={exceeded:['Exceeded','pos'],achieved:['Achieved','pos'],missed:['Missed','neg'],in_progress:['In progress','acc'],pending:['Pending',''],not_evaluable:['Not scored','']};
+function ledgerHTML(r){ const L=r.ledger;
+  if(!L) return `<div class="empty">No commitment ledger for this company.</div>`;
+  if(L.unsupported) return `<div class="note">${esc(L.unsupported)}</div>`;
+  let h=`<p style="margin:0 0 12px;font-size:14.5px;max-width:760px">${esc(L.read||'')}</p>${ledgerSummary(L)}`;
+  let q='';
+  for(const row of L.rows){ const ev=row.evaluation, [sl,sc]=STATUS[ev.status]||[ev.status,''];
+    if(row.said_in!==q){ q=row.said_in; h+=`<div class="lq">SAID ON THE ${esc(q)} CALL</div>`; }
+    let prog='';
+    if(ev.status==='in_progress' && ev.interim && num(row.target_low) && row.metric!=='ebitda_margin' && row.metric!=='ebit_margin'){
+      const v=ev.interim.run_rate??ev.interim.value, tgt=row.target_low, mx=Math.max(v,tgt)*1.1;
+      prog=`<div class="prog" title="Interim vs target"><i style="width:${(v/mx*100).toFixed(1)}%"></i><u style="left:${(tgt/mx*100).toFixed(1)}%"></u></div>`; }
+    h+=`<div class="le"><div><div class="what">${esc(row.metric_label)} <span class="h">· ${esc(row.target_text)} · by ${esc(row.horizon || row.horizon_end)}</span></div>
+      <blockquote>“${esc(row.quote)}”</blockquote>
+      ${srcText(row.source)}${row.quote_verified===true?'<div class="src">Quote matched verbatim in the transcript.</div>':row.quote_verified===false?'<div class="src warn">Quote could not be matched verbatim — treat with caution.</div>':''}</div>
+      <div class="ev"><span class="tag ${sc}">${sl}</span>${row.horizon_end?` <span class="faint small">evaluated at ${esc(row.horizon_end)}${row.basis?' · '+esc(row.basis.replace('_',' ')):''}</span>`:''}
+      <div class="rs">${esc(ev.reason)}</div>${prog}</div></div>`; }
+  return h+`<div class="note" style="margin-top:16px">${esc(L.method||'')} “Exceeded” means beating the target by more than 5% of its value (0.25 pp minimum for percentages).</div>`;
+}
+function renderMod(r){
+  switch(state.mod){
+    case 'ledger': return ledgerHTML(r);
+    case 'business':{ const b=r.business_snapshot||{}; const seg=b.segments||[];
+      return `<p style="font-size:14.5px;max-width:760px;margin-top:0">${esc(b.what)}</p>
+        ${seg.length?`<div class="h2"><h2>Revenue mix</h2><span class="m">% of revenue</span></div>`+seg.map(s=>`<div class="segr"><span>${esc(s.name)}</span><div class="tr"><i style="width:${Math.max(0,Math.min(100,+s.rev_share||0))}%"></i></div><span class="num" style="text-align:right">${esc(s.rev_share)}%</span></div>${s.note?`<div class="src" style="margin:-2px 0 6px">${esc(s.note)}</div>`:''}`).join(''):''}
+        <div class="note"><b>Business model.</b> ${esc(b.model)}</div>${srcText(b.source)}`; }
+    case 'financials':{ const f=r.financial_snapshot||{metrics:[]};
+      return `<div class="metric">${f.metrics.map(m=>`<div><div class="k">${esc(m.k)}</div><div class="v num">${esc(m.v)}</div><div class="sb">${esc(m.sub)}</div>${m.basis?`<div class="src">${esc(m.basis)}</div>`:''}${srcText(m.source)}</div>`).join('')}</div>`; }
+    case 'trajectory':{ const t=r.trajectory; return `${trajChart(t)}<p class="small muted" style="max-width:760px">${esc(t.read)}</p>${srcText(t.source)}`; }
+    case 'balance':{ const b=r.balance_sheet||{points:[]};
+      return b.points.map(p=>`<div class="pt"><div class="k">${esc(p.k)}<span class="num">${esc(p.v)}</span></div><div class="muted">${esc(p.read)}${srcText(p.source)}</div></div>`).join(''); }
+    case 'cash':{ const c=r.cash_quality||{}; if(c.applicable===false) return `<div class="note">${esc(c.reason)}</div>`;
+      return `${cashChart(c)}<p class="small muted" style="max-width:760px">${esc(c.read)}</p>${srcText(c.source)}`; }
+    case 'bull':{ const b=r.bull_bear||{bull:[],bear:[]};
+      return `<div class="bb"><div><div class="h2"><h2 class="pos">Bull case</h2></div><ul>${b.bull.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+        <div><div class="h2"><h2 class="neg">Bear case</h2></div><ul>${b.bear.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div></div>
+        <div class="foot">Interpretation generated from the facts above; not investment advice.</div>`; }
+  }
+  return '';
+}
+function trajChart(t){ const R=t.revenue||[], M=t.margin||t.ebitda_margin||[], Q=t.quarters||[], n=R.length; if(!n) return '';
+  const W=720,H=220,pl=44,pr=44,pt=14,pb=26, rv=R.filter(num), mv=M.filter(num); const rmax=Math.max(...rv)*1.1||1;
+  const mmin=Math.min(...mv)-0.5, mmax=Math.max(...mv)+0.5; const cw=(W-pl-pr)/n, bw=cw*.5;
+  const x=i=>pl+(i+.5)*cw, by=v=>H-pb-(v/rmax)*(H-pt-pb), my=v=>H-pb-((v-mmin)/((mmax-mmin)||1))*(H-pt-pb);
+  const grid=[0,.5,1].map(f=>`<line x1="${pl}" x2="${W-pr}" y1="${by(rmax*f/1.1)}" y2="${by(rmax*f/1.1)}" stroke="var(--line)"/><text x="${pl-6}" y="${by(rmax*f/1.1)+3}" font-size="10" fill="var(--faint)" text-anchor="end">${inr(rmax*f/1.1/1000,1)}k</text>`).join('');
+  const bars=R.map((v,i)=>num(v)?`<rect x="${x(i)-bw/2}" y="${by(v)}" width="${bw}" height="${H-pb-by(v)}" fill="var(--line-2)"/>`:'').join('');
+  const pts=M.map((v,i)=>num(v)?[x(i),my(v),v]:null).filter(Boolean);
+  const line=pts.length>1?`<polyline fill="none" stroke="var(--accent)" stroke-width="1.8" points="${pts.map(p=>p[0]+','+p[1]).join(' ')}"/>`:'';
+  const dots=pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="2.8" fill="var(--accent)"/><text x="${p[0]}" y="${p[1]-7}" font-size="10" fill="var(--accent)" text-anchor="middle">${p[2].toFixed(1)}</text>`).join('');
+  const lab=Q.map((q,i)=>`<text x="${x(i)}" y="${H-8}" font-size="10" fill="var(--faint)" text-anchor="middle">${esc(q)}</text>`).join('');
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${esc(t.series_label)}">${grid}${bars}${line}${dots}${lab}</svg>
+    <div class="src" style="padding:0 4px 4px">Bars: revenue, ₹ crore (left axis) · Line: ${esc(t.margin_label||'EBITDA margin')}, %</div></div>`; }
+function cashChart(c){ const V=c.cfo_ebitda||[], Q=c.quarters||[], n=V.length; if(!n) return `<div class="empty">Cash-flow data not available.</div>`;
+  const W=720,H=180,pl=36,pr=20,pt=16,pb=26, mx=Math.max(1.2,...V.filter(num))*1.05;
+  const x=i=>pl+(n===1?.5:i/(n-1))*(W-pl-pr), y=v=>H-pb-(v/mx)*(H-pt-pb);
+  const pts=V.map((v,i)=>num(v)?[x(i),y(v),v]:null);
+  const segs=[]; let cur=[]; pts.forEach(p=>{ if(p) cur.push(p); else { if(cur.length) segs.push(cur); cur=[]; } }); if(cur.length) segs.push(cur);
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Cash conversion">
+    <line x1="${pl}" x2="${W-pr}" y1="${y(1)}" y2="${y(1)}" stroke="var(--muted)" stroke-dasharray="3 3"/><text x="${pl-6}" y="${y(1)+3}" font-size="10" fill="var(--faint)" text-anchor="end">1.0</text>
+    ${segs.map(s=>`<polyline fill="none" stroke="var(--accent)" stroke-width="1.8" points="${s.map(p=>p[0]+','+p[1]).join(' ')}"/>`).join('')}
+    ${pts.map((p,i)=>p?`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="var(--accent)"/><text x="${p[0]}" y="${p[1]-8}" font-size="10" fill="var(--accent)" text-anchor="middle">${p[2].toFixed(2)}</text>`:`<text x="${x(i)}" y="${H-pb-6}" font-size="10" fill="var(--faint)" text-anchor="middle">n/a</text>`).join('')}
+    ${Q.map((q,i)=>`<text x="${x(i)}" y="${H-8}" font-size="10" fill="var(--faint)" text-anchor="middle">${esc(q)}</text>`).join('')}</svg>
+    <div class="src" style="padding:0 4px 4px">Operating cash flow ÷ EBITDA, by fiscal year. 1.0 = every rupee of EBITDA became operating cash.</div></div>`; }
+function researchMissing(tk){
+  return `<div class="bar"><button class="btn q sm" data-act="back-research">‹ Back</button></div>
+    <div class="rhead"><div><div class="tk faint">${esc(tk)}.NS</div><h2>${esc(nameOf(tk))}</h2></div></div>
+    <div class="panel" style="max-width:640px"><h2 style="font-size:15px;margin:0 0 6px">Run primary-source research on ${esc(tk)}</h2>
+    <p class="small muted" style="margin:0 0 12px">FINN fetches Screener.in's standardised tables, the latest annual report and the last four concall transcripts, extracts management's quantified commitments with a small model, then scores each one against reported figures.</p>
+    ${LIVE.reachable?`<button class="btn" data-act="run-research" data-tk="${esc(tk)}">Run analysis</button>`
+      :`<div class="note">This needs the live server: <code>python backend/serve.py</code>. The offline demo ships worked examples for ${Object.keys(DATA.research).map(esc).join(', ')}.</div>`}</div>`;
+}
+async function runResearch(tk){
+  if(!validTicker(tk)||!LIVE.reachable) return;
+  state.loading=tk; render();
+  try{ const res=await fetch('/api/research/'+encodeURIComponent(tk)); const j=await res.json();
+    if(!res.ok||j.error) throw new Error(j.error||res.status); DATA.research[tk]=j; }
+  catch(e){ toast('Analysis failed: '+String(e.message||e).slice(0,120)); }
+  state.loading=null; render();
+}
+
+/* ============ SETTINGS ============ */
+function renderSettings(){ const s=DATA.meta.sources||{};
+  const srow=(k,l)=>{ const x=s[k]||{}; return `<div class="row"><div><div>${l}</div><div class="xs faint">${x.as_of?'as of '+esc(fmtTime(x.as_of)):''}${x.coverage?' · coverage '+esc(x.coverage):''}${x.last_error?' · last error: '+esc(x.last_error):''}</div></div>
+    <span class="tag ${x.state==='live'?'pos':x.state==='failed'?'neg':x.state==='partial'||x.state==='stale'?'warn':''}">${esc(x.state||'sample')}</span></div>`; };
+  return `<div style="max-width:680px">
+  <div class="h2"><h2>Data sources</h2><span class="m"><button class="ib" data-act="refresh">Refresh</button></span></div>
+  ${srow('prices','End-of-day prices & volume')}${srow('announcements','Exchange filings (NSE)')}
+  <div class="row"><div>Backend</div><span class="tag ${LIVE.reachable?'pos':''}">${LIVE.reachable?'connected':'offline demo'}</span></div>
+  <div class="note">“Live” means every holding refreshed in the last cycle. “Partly live” means some tickers failed and keep their previous values, marked as stale in the holdings table.</div>
+  <div class="h2"><h2>Preferences</h2></div>
+  <div class="row"><div>Theme</div><button class="ib" data-act="theme">${document.documentElement.dataset.theme==='light'?'Switch to dark':'Switch to light'}</button></div>
+  <div class="row"><div>Alert thresholds</div><span class="small muted">${state.thresh.vol_ratio.toFixed(1)}× volume · ±${state.thresh.price_move_pct.toFixed(1)}% · ${state.thresh.watched.size} categories <button class="ib" data-act="go" data-v="alerts">Edit</button></span></div>
+  <div class="row"><div>Reset this device</div><button class="ib" data-act="reset">Clear saved preferences & alert states</button></div>
+  <div class="h2"><h2>About</h2></div>
+  <p class="small muted">FINN monitors exchange filings and end-of-day market data across your holdings (Push), and builds evidence-linked research on any NSE company (Pull), centred on whether management delivers what it promises.</p>
+  <div class="foot">${esc(DATA.meta.data_note)}<br>Not investment advice.</div></div>`; }
+
+/* ============ ROOT ============ */
+const TITLES={today:['Today','What changed and what needs attention'],alerts:['Alerts','Price, volume and corporate-event triggers'],
+  research:['Research','Evidence-linked analysis of any NSE company'],portfolio:['Portfolio','Holdings at end of day'],
+  stock:['Stock',''],settings:['Settings','Data sources and preferences']};
+function render(){
+  const [tt,ts]=TITLES[state.view]; const ss=sourceState();
+  $('#hdr').innerHTML=`<div class="brandrow"><b>FINN</b><div class="hdr-r"><button class="status ${ss.c}" data-act="refresh" title="Refresh"><i></i>${esc(ss.t)}</button>
+    <button class="ib" data-act="theme" aria-label="Toggle theme">${document.documentElement.dataset.theme==='light'?'Dark':'Light'}</button></div></div>
+    <div class="vt"><h1>${state.view==='research'&&state.research?'Research':tt}</h1>${ts&&!(state.view==='research'&&state.research)?`<span class="sub">${ts}</span>`:''}</div>`;
+  const V={today:renderToday,alerts:renderAlerts,research:renderResearch,portfolio:renderPortfolio,settings:renderSettings,stock:renderStock};
+  $('#main').innerHTML=V[state.view]();
+  renderNav();
+  if(state.view==='stock') drawChart();
+  document.title = state.view==='research'&&state.research ? `${state.research} — FINN` : `FINN — ${tt}`;
+}
+
+/* ============ events (delegated; no data is ever interpolated into JS) ============ */
+document.addEventListener('click', e=>{
+  const el=e.target.closest('[data-act]'); if(!el) return;
+  const a=el.dataset.act, v=el.dataset.v, tk=el.dataset.tk;
+  if(el.tagName==='A' && a!=='seen') return;   // real links (original filings) keep default behaviour
+  switch(a){
+    case 'go': go(v); break;
+    case 'stock': e.stopPropagation(); state.from=state.view; state.st='ov'; openStock(tk); break;
+    case 'research': e.stopPropagation(); openResearch(tk); break;
+    case 'run-research': runResearch(tk); break;
+    case 'back-research': if(state.research){ state.research=null; if(state.from&&state.from!=='research'){ const f=state.from; state.from=null; go(f); } else render(); } break;
+    case 'mod': setMod(v); break;
+    case 'tv': state.tv=v; render(); break;
+    case 'window': state.window=+v; savePrefs(); render(); break;
+    case 'toggle-routine': state.showRoutine=!state.showRoutine; render(); break;
+    case 'open-item': if(!e.target.closest('button,a')) el.classList.toggle('open'); break;
+    case 'st': state.st=v; render(); break;
+    case 'rng': state.rng=v; render(); break;
+    case 'sort': state.sort = state.sort.k===v ? {k:v,dir:-state.sort.dir} : {k:v,dir:(v==='tk'||v==='sector')?1:-1}; render(); break;
+    case 'cat': state.thresh.watched.has(v)?state.thresh.watched.delete(v):state.thresh.watched.add(v); savePrefs(); render(); break;
+    case 'alert': setAlert(el.dataset.k, el.dataset.s); break;
+    case 'show-dismissed': state.showDismissed=!state.showDismissed; render(); break;
+    case 'seen': e.preventDefault(); markAllSeen(); render(); break;
+    case 'theme': { const d=document.documentElement, n=d.dataset.theme==='light'?'dark':'light'; d.dataset.theme=n; store.set('finn-theme',n); render(); break; }
+    case 'refresh': loadLive(true); break;
+    case 'reset': ['finn-prefs',AKEY,SEEN_KEY,'finn-theme'].forEach(store.del); ASTATE={}; PREV_SEEN=null;
+      state.thresh={vol_ratio:DEF.vol_ratio,price_move_pct:DEF.price_move_pct,watched:new Set(DEF.watched_categories)}; toast('Saved data cleared'); render(); break;
+  }
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter' && e.target.id==='rin'){ openResearch(e.target.value); return; }
+  if((e.key==='Enter'||e.key===' ') && e.target.matches('.item[data-act="open-item"]')){ e.preventDefault(); e.target.classList.toggle('open'); }
+});
+document.addEventListener('input', e=>{
+  const k=e.target.dataset?.thresh;
+  if(k){ const v=parseFloat(e.target.value); state.thresh[k]=v;   // update the readout only — no re-render while dragging
+    const o=$(k==='vol_ratio'?'#o-vol':'#o-px'); if(o) o.textContent = k==='vol_ratio'? v.toFixed(1)+'×' : v.toFixed(1)+'%'; return; }
+  if(e.target.id==='rin'){ const q=e.target.value.toUpperCase(); document.querySelectorAll('#unis .uni').forEach(b=>b.style.display=b.dataset.q.includes(q)?'':'none'); }
+});
+document.addEventListener('change', e=>{ if(e.target.dataset?.thresh){ savePrefs(); render(); } });
+
+/* ============ live data ============ */
+let pendingRender=false;
+async function loadLive(manual){
+  try{ const r=await fetch('/api/data',{cache:'no-store'}); if(!r.ok) throw new Error(r.status);
+    const d=await r.json(); if(!d||!d.meta||!Array.isArray(d.portfolio)) throw new Error('bad payload');
+    const research={...DATA.research, ...(d.research||{})};
+    DATA=d; DATA.research=research; NOW=new Date(d.meta.served_at||Date.now());
+    LIVE.reachable=true; LIVE.at=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    const busy=document.activeElement&&/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName);
+    if(busy) pendingRender=true; else render();
+    if(manual){ const s=sourceState(); toast(s.c==='live'?'Refreshed from live sources':`Server reached — ${s.t.toLowerCase()}`); }
+  }catch(e){ if(manual) toast(LIVE.reachable?'Refresh failed — showing last data':'No backend running — showing the sample snapshot'); }
+}
+document.addEventListener('focusout', ()=>{ if(pendingRender){ pendingRender=false; setTimeout(render,0); } });
+
+if(PREV_SEEN===null) store.set(SEEN_KEY, DATA.announcements.map(a=>a.id));
+render();
+if(location.protocol.startsWith('http')){ loadLive(); setInterval(()=>loadLive(),60000); }
+</script>
+</body>
+</html>

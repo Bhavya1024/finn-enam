@@ -1,0 +1,9 @@
+# FINN backend — live data engine
+# The frontend (index.html) needs NONE of these; it runs standalone.
+# These are only for regenerating data/finn_data.json from live sources.
+
+yfinance>=0.2.40        # end-of-day price & volume (NSE/BSE via .NS/.BO)
+requests>=2.31          # NSE/BSE announcement APIs, screener.in
+beautifulsoup4>=4.12    # parse screener.in tables + document links
+pypdf>=4.2              # extract text from annual reports & concall transcripts
+anthropic>=0.40         # LLM wrapper (swap for any provider in backend/llm.py)

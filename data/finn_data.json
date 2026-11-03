@@ -1,0 +1,2172 @@
+{
+  "meta": {
+    "generated_at": "2026-11-02T08:30:00+05:30",
+    "data_note": "Illustrative SAMPLE data. Figures are plausible and internally consistent but are not company data and have not been verified. Fiscal quarters follow India's April–March year (Jul–Sep 2026 = Q2 FY27). The live engine (/backend) fetches EOD prices (Yahoo Finance), NSE filings, Screener.in tables and company PDFs.",
+    "base_currency": "INR",
+    "amounts_in": "₹ crore unless stated",
+    "fy_labels_fixed": true,
+    "sources": {
+      "prices": {
+        "state": "sample",
+        "as_of": "2026-11-02T08:30:00+05:30",
+        "detail": "Shipped sample snapshot"
+      },
+      "announcements": {
+        "state": "sample",
+        "as_of": "2026-11-02T08:30:00+05:30",
+        "detail": "Shipped sample snapshot"
+      }
+    }
+  },
+  "portfolio": [
+    {
+      "ticker": "RELIANCE",
+      "name": "Reliance Industries",
+      "sector": "Energy / Conglomerate",
+      "size": "Large",
+      "mcap_cr": 1890000,
+      "price": 1398.4,
+      "prev_close": 1381.2,
+      "chg_pct": 1.25,
+      "volume": 9820000,
+      "avg_vol_20d": 8100000,
+      "vol_ratio": 1.21,
+      "spark": [
+        1352,
+        1360,
+        1358,
+        1371,
+        1369,
+        1377,
+        1381,
+        1398
+      ]
+    },
+    {
+      "ticker": "HDFCBANK",
+      "name": "HDFC Bank",
+      "sector": "Banking",
+      "size": "Large",
+      "mcap_cr": 1420000,
+      "price": 1862.0,
+      "prev_close": 1871.5,
+      "chg_pct": -0.51,
+      "volume": 12400000,
+      "avg_vol_20d": 11800000,
+      "vol_ratio": 1.05,
+      "spark": [
+        1840,
+        1852,
+        1860,
+        1866,
+        1875,
+        1870,
+        1871,
+        1862
+      ]
+    },
+    {
+      "ticker": "TCS",
+      "name": "Tata Consultancy Services",
+      "sector": "IT Services",
+      "size": "Large",
+      "mcap_cr": 1120000,
+      "price": 3098.5,
+      "prev_close": 3075.0,
+      "chg_pct": 0.76,
+      "volume": 2600000,
+      "avg_vol_20d": 2400000,
+      "vol_ratio": 1.08,
+      "spark": [
+        3010,
+        3040,
+        3055,
+        3042,
+        3060,
+        3071,
+        3075,
+        3098
+      ]
+    },
+    {
+      "ticker": "INFY",
+      "name": "Infosys",
+      "sector": "IT Services",
+      "size": "Large",
+      "mcap_cr": 640000,
+      "price": 1545.0,
+      "prev_close": 1540.2,
+      "chg_pct": 0.31,
+      "volume": 5100000,
+      "avg_vol_20d": 5600000,
+      "vol_ratio": 0.91,
+      "spark": [
+        1512,
+        1520,
+        1531,
+        1528,
+        1539,
+        1544,
+        1540,
+        1545
+      ]
+    },
+    {
+      "ticker": "ITC",
+      "name": "ITC",
+      "sector": "FMCG",
+      "size": "Large",
+      "mcap_cr": 560000,
+      "price": 448.3,
+      "prev_close": 447.1,
+      "chg_pct": 0.27,
+      "volume": 9900000,
+      "avg_vol_20d": 10200000,
+      "vol_ratio": 0.97,
+      "spark": [
+        441,
+        443,
+        445,
+        444,
+        446,
+        447,
+        447,
+        448
+      ]
+    },
+    {
+      "ticker": "LT",
+      "name": "Larsen & Toubro",
+      "sector": "Infra / Engineering",
+      "size": "Large",
+      "mcap_cr": 510000,
+      "price": 3712.0,
+      "prev_close": 3650.4,
+      "chg_pct": 1.69,
+      "volume": 3400000,
+      "avg_vol_20d": 2100000,
+      "vol_ratio": 1.62,
+      "spark": [
+        3560,
+        3588,
+        3601,
+        3620,
+        3640,
+        3655,
+        3650,
+        3712
+      ]
+    },
+    {
+      "ticker": "TATAMOTORS",
+      "name": "Tata Motors",
+      "sector": "Automobiles",
+      "size": "Large",
+      "mcap_cr": 268000,
+      "price": 728.5,
+      "prev_close": 741.0,
+      "chg_pct": -1.69,
+      "volume": 21500000,
+      "avg_vol_20d": 14200000,
+      "vol_ratio": 1.51,
+      "spark": [
+        760,
+        755,
+        749,
+        746,
+        744,
+        740,
+        741,
+        728
+      ]
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "name": "Sun Pharmaceutical",
+      "sector": "Pharma",
+      "size": "Large",
+      "mcap_cr": 405000,
+      "price": 1688.0,
+      "prev_close": 1679.3,
+      "chg_pct": 0.52,
+      "volume": 2100000,
+      "avg_vol_20d": 2050000,
+      "vol_ratio": 1.02,
+      "spark": [
+        1650,
+        1662,
+        1670,
+        1668,
+        1675,
+        1680,
+        1679,
+        1688
+      ]
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "name": "Asian Paints",
+      "sector": "Consumer / Paints",
+      "size": "Large",
+      "mcap_cr": 225000,
+      "price": 2345.0,
+      "prev_close": 2402.6,
+      "chg_pct": -2.4,
+      "volume": 4800000,
+      "avg_vol_20d": 2300000,
+      "vol_ratio": 2.09,
+      "spark": [
+        2460,
+        2448,
+        2431,
+        2420,
+        2411,
+        2405,
+        2402,
+        2345
+      ]
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "name": "Bajaj Finance",
+      "sector": "NBFC",
+      "size": "Large",
+      "mcap_cr": 560000,
+      "price": 905.0,
+      "prev_close": 898.2,
+      "chg_pct": 0.76,
+      "volume": 15600000,
+      "avg_vol_20d": 16100000,
+      "vol_ratio": 0.97,
+      "spark": [
+        878,
+        885,
+        890,
+        888,
+        894,
+        899,
+        898,
+        905
+      ]
+    },
+    {
+      "ticker": "ADANIPORTS",
+      "name": "Adani Ports & SEZ",
+      "sector": "Infra / Ports",
+      "size": "Large",
+      "mcap_cr": 305000,
+      "price": 1412.0,
+      "prev_close": 1388.5,
+      "chg_pct": 1.69,
+      "volume": 6700000,
+      "avg_vol_20d": 5900000,
+      "vol_ratio": 1.14,
+      "spark": [
+        1360,
+        1372,
+        1381,
+        1379,
+        1385,
+        1390,
+        1388,
+        1412
+      ]
+    },
+    {
+      "ticker": "TITAN",
+      "name": "Titan Company",
+      "sector": "Consumer / Jewellery",
+      "size": "Large",
+      "mcap_cr": 295000,
+      "price": 3325.0,
+      "prev_close": 3300.1,
+      "chg_pct": 0.75,
+      "volume": 1800000,
+      "avg_vol_20d": 1750000,
+      "vol_ratio": 1.03,
+      "spark": [
+        3250,
+        3268,
+        3281,
+        3279,
+        3290,
+        3301,
+        3300,
+        3325
+      ]
+    },
+    {
+      "ticker": "TATASTEEL",
+      "name": "Tata Steel",
+      "sector": "Metals",
+      "size": "Large",
+      "mcap_cr": 205000,
+      "price": 164.2,
+      "prev_close": 161.8,
+      "chg_pct": 1.48,
+      "volume": 42000000,
+      "avg_vol_20d": 38000000,
+      "vol_ratio": 1.11,
+      "spark": [
+        157,
+        159,
+        160,
+        159,
+        161,
+        162,
+        161,
+        164
+      ]
+    },
+    {
+      "ticker": "POWERGRID",
+      "name": "Power Grid Corp",
+      "sector": "Utilities",
+      "size": "Large",
+      "mcap_cr": 280000,
+      "price": 301.5,
+      "prev_close": 299.8,
+      "chg_pct": 0.57,
+      "volume": 8900000,
+      "avg_vol_20d": 9100000,
+      "vol_ratio": 0.98,
+      "spark": [
+        294,
+        296,
+        298,
+        297,
+        299,
+        300,
+        299,
+        301
+      ]
+    },
+    {
+      "ticker": "DMART",
+      "name": "Avenue Supermarts",
+      "sector": "Retail",
+      "size": "Mid",
+      "mcap_cr": 265000,
+      "price": 4075.0,
+      "prev_close": 4120.9,
+      "chg_pct": -1.11,
+      "volume": 1200000,
+      "avg_vol_20d": 900000,
+      "vol_ratio": 1.33,
+      "spark": [
+        4180,
+        4160,
+        4142,
+        4138,
+        4130,
+        4125,
+        4120,
+        4075
+      ]
+    },
+    {
+      "ticker": "DIXON",
+      "name": "Dixon Technologies",
+      "sector": "EMS / Electronics",
+      "size": "Mid",
+      "mcap_cr": 92000,
+      "price": 15320.0,
+      "prev_close": 14210.0,
+      "chg_pct": 7.81,
+      "volume": 2400000,
+      "avg_vol_20d": 780000,
+      "vol_ratio": 3.08,
+      "spark": [
+        13200,
+        13450,
+        13600,
+        13720,
+        13900,
+        14050,
+        14210,
+        15320
+      ]
+    },
+    {
+      "ticker": "POLYCAB",
+      "name": "Polycab India",
+      "sector": "Cables / Wires",
+      "size": "Mid",
+      "mcap_cr": 104000,
+      "price": 6910.0,
+      "prev_close": 6855.0,
+      "chg_pct": 0.8,
+      "volume": 850000,
+      "avg_vol_20d": 820000,
+      "vol_ratio": 1.04,
+      "spark": [
+        6720,
+        6760,
+        6800,
+        6790,
+        6830,
+        6860,
+        6855,
+        6910
+      ]
+    },
+    {
+      "ticker": "VBL",
+      "name": "Varun Beverages",
+      "sector": "FMCG / Beverages",
+      "size": "Mid",
+      "mcap_cr": 172000,
+      "price": 508.0,
+      "prev_close": 502.5,
+      "chg_pct": 1.09,
+      "volume": 9200000,
+      "avg_vol_20d": 9500000,
+      "vol_ratio": 0.97,
+      "spark": [
+        492,
+        496,
+        500,
+        499,
+        503,
+        504,
+        502,
+        508
+      ]
+    }
+  ],
+  "adhoc_universe": [
+    {
+      "ticker": "KPITTECH",
+      "name": "KPIT Technologies",
+      "sector": "Auto-tech / IT"
+    },
+    {
+      "ticker": "JUBLFOOD",
+      "name": "Jubilant FoodWorks",
+      "sector": "QSR / Food"
+    },
+    {
+      "ticker": "IEX",
+      "name": "Indian Energy Exchange",
+      "sector": "Exchanges"
+    },
+    {
+      "ticker": "CDSL",
+      "name": "Central Depository Services",
+      "sector": "Market Infra"
+    }
+  ],
+  "default_thresholds": {
+    "vol_ratio": 2.0,
+    "price_move_pct": 4.0,
+    "watched_categories": [
+      "results",
+      "M&A",
+      "management_change",
+      "fund_raise",
+      "credit_rating",
+      "litigation"
+    ]
+  },
+  "announcements": [
+    {
+      "id": "a01",
+      "ticker": "DIXON",
+      "name": "Dixon Technologies",
+      "category": "results",
+      "priority": "high",
+      "time": "2026-11-02T07:55:00+05:30",
+      "title": "Q2 FY27 Results — Board approves financial results for quarter ended Sep 2026",
+      "summary": "Revenue +38% YoY, +12% QoQ; PAT +61% YoY on display-module ramp. Margins expanding.",
+      "results": {
+        "quarters": [
+          "Q2 FY26",
+          "Q1 FY27",
+          "Q2 FY27"
+        ],
+        "rows": [
+          {
+            "metric": "Revenue",
+            "values": [
+              9340,
+              12760,
+              14290
+            ]
+          },
+          {
+            "metric": "EBITDA",
+            "values": [
+              378,
+              540,
+              632
+            ]
+          },
+          {
+            "metric": "PBT",
+            "values": [
+              286,
+              402,
+              489
+            ]
+          },
+          {
+            "metric": "PAT",
+            "values": [
+              212,
+              289,
+              341
+            ]
+          }
+        ],
+        "ebitda_margin": [
+          4.05,
+          4.23,
+          4.42
+        ],
+        "source": {
+          "kind": "sample",
+          "label": "Illustrative sample data",
+          "would_be": "Screener.in quarterly table, reconciled to the results filing"
+        },
+        "reconciliation": {
+          "status": "unverified",
+          "reason": "sample data — no filing to reconcile against"
+        },
+        "basis": "operating"
+      },
+      "detail": "Mobile & EMS division drove the beat; new display fab contributed a partial quarter. Management flagged on the filing that Q3 will see full-quarter display contribution. EBITDA margin expanded ~37bps QoQ to 4.42%."
+    },
+    {
+      "id": "a02",
+      "ticker": "ASIANPAINT",
+      "name": "Asian Paints",
+      "category": "results",
+      "priority": "high",
+      "time": "2026-11-01T18:40:00+05:30",
+      "title": "Q2 FY27 Results — Standalone & Consolidated",
+      "summary": "Revenue -3% YoY, volumes flat; PAT -14% YoY as discounting hits margins. Weakest print in 8 quarters.",
+      "results": {
+        "quarters": [
+          "Q2 FY26",
+          "Q1 FY27",
+          "Q2 FY27"
+        ],
+        "rows": [
+          {
+            "metric": "Revenue",
+            "values": [
+              8460,
+              8990,
+              8205
+            ]
+          },
+          {
+            "metric": "EBITDA",
+            "values": [
+              1590,
+              1520,
+              1310
+            ]
+          },
+          {
+            "metric": "PBT",
+            "values": [
+              1380,
+              1300,
+              1095
+            ]
+          },
+          {
+            "metric": "PAT",
+            "values": [
+              1020,
+              965,
+              878
+            ]
+          }
+        ],
+        "ebitda_margin": [
+          18.79,
+          16.91,
+          15.97
+        ],
+        "source": {
+          "kind": "sample",
+          "label": "Illustrative sample data",
+          "would_be": "Screener.in quarterly table, reconciled to the results filing"
+        },
+        "reconciliation": {
+          "status": "unverified",
+          "reason": "sample data — no filing to reconcile against"
+        },
+        "basis": "operating"
+      },
+      "detail": "Gross margin compressed on aggressive competitive discounting following new entrants in decorative paints. The -2.4% price reaction (today) reflects the margin miss more than the revenue line."
+    },
+    {
+      "id": "a03",
+      "ticker": "LT",
+      "name": "Larsen & Toubro",
+      "category": "M&A",
+      "priority": "high",
+      "time": "2026-11-02T09:10:00+05:30",
+      "title": "L&T to acquire 51% stake in green-hydrogen electrolyser maker for ₹2,400 cr",
+      "summary": "Bolt-on into energy transition; funded from internal accruals. Signals capex intent in new-energy.",
+      "detail": "The target makes alkaline + PEM electrolysers. Deal pegs EV/sales ~3.1x. L&T says it is EPS-neutral in year one, accretive FY29+. Stock +1.7% on the day."
+    },
+    {
+      "id": "a04",
+      "ticker": "TATAMOTORS",
+      "name": "Tata Motors",
+      "category": "management_change",
+      "priority": "high",
+      "time": "2026-11-02T08:20:00+05:30",
+      "title": "Appointment of Group Chief Financial Officer",
+      "summary": "New Group CFO joins from a global auto OEM; capital-allocation continuity in focus post-demerger.",
+      "management_change": {
+        "role": "Group Chief Financial Officer",
+        "direction": "in",
+        "person": {
+          "name": "Ananya Krishnan",
+          "headline": "Ex-Finance Director, Volvo Cars (Asia-Pacific)",
+          "bio": "20+ years in automotive finance. Led APAC treasury & FP&A at Volvo Cars; earlier 9 years at Ford in powertrain cost & product finance. CA (ICAI) and MBA (INSEAD). Known for net-debt reduction programmes.",
+          "prev": "Finance Director, Volvo Cars APAC",
+          "tenure_prev": "2019–2026"
+        },
+        "replacing": "Outgoing CFO retiring after 11 years."
+      },
+      "detail": "Comes weeks after the PV/CV demerger. Market read: continuity on the JLR deleveraging path. Enrichment below is public professional background only (push-side enrichment is permitted)."
+    },
+    {
+      "id": "a05",
+      "ticker": "TATAMOTORS",
+      "name": "Tata Motors",
+      "category": "press_release",
+      "priority": "medium",
+      "time": "2026-11-01T14:05:00+05:30",
+      "title": "JLR October wholesales update",
+      "summary": "JLR wholesales -6% YoY; Range Rover order book still >12 weeks. China soft.",
+      "detail": "Chip supply normalised; demand-side softness in China the swing factor. Contributed to today's -1.7% move alongside CFO transition headline."
+    },
+    {
+      "id": "a06",
+      "ticker": "RELIANCE",
+      "name": "Reliance Industries",
+      "category": "fund_raise",
+      "priority": "high",
+      "time": "2026-11-01T20:15:00+05:30",
+      "title": "Jio Platforms — pre-IPO; board approves ₹18,000 cr preferential allotment to anchor investors",
+      "summary": "Pre-IPO raise at implied ~₹11.2L cr valuation for Jio; sets the marker ahead of listing.",
+      "detail": "Preferential allotment to a sovereign-fund-led consortium. Implied Jio valuation steps up ~14% vs the last external mark. Reliance +1.25% today."
+    },
+    {
+      "id": "a07",
+      "ticker": "ADANIPORTS",
+      "name": "Adani Ports & SEZ",
+      "category": "credit_rating",
+      "priority": "medium",
+      "time": "2026-11-01T11:30:00+05:30",
+      "title": "CRISIL reaffirms AAA/Stable; revises outlook commentary",
+      "summary": "Rating AAA reaffirmed, stable. Deleveraging + record cargo cited. No action needed.",
+      "detail": "Net debt/EBITDA guided below 2.5x. Reaffirmation, not an upgrade — low surprise, surfaced at medium priority."
+    },
+    {
+      "id": "a08",
+      "ticker": "TATASTEEL",
+      "name": "Tata Steel",
+      "category": "capex",
+      "priority": "medium",
+      "time": "2026-11-01T16:50:00+05:30",
+      "title": "Board approves ₹27,000 cr Kalinganagar phase-III expansion",
+      "summary": "Adds 5 MTPA; commissioning FY30. Funded 60:40 debt:internal accruals.",
+      "detail": "Steps up domestic capacity to counter European drag. Watch leverage — D/E already elevated."
+    },
+    {
+      "id": "a09",
+      "ticker": "HDFCBANK",
+      "name": "HDFC Bank",
+      "category": "insider_trading",
+      "priority": "low",
+      "time": "2026-11-01T17:20:00+05:30",
+      "title": "Disclosure under SEBI (PIT) — designated person sale",
+      "summary": "A senior executive sold 12,000 shares (ESOP-linked). Immaterial vs holding.",
+      "detail": "Routine ESOP monetisation. Surfaced low; included for completeness."
+    },
+    {
+      "id": "a10",
+      "ticker": "SUNPHARMA",
+      "name": "Sun Pharmaceutical",
+      "category": "litigation",
+      "priority": "high",
+      "time": "2026-11-01T13:10:00+05:30",
+      "title": "USFDA issues 3 observations (Form 483) for Halol facility",
+      "summary": "Form 483, not a warning letter. 3 observations, procedural. Watch for escalation.",
+      "detail": "Halol is a key export site. Market treated as low-to-medium risk (stock +0.5%); flagged high because facility is material to US revenue."
+    },
+    {
+      "id": "a11",
+      "ticker": "BAJFINANCE",
+      "name": "Bajaj Finance",
+      "category": "results",
+      "priority": "high",
+      "time": "2026-10-31T19:00:00+05:30",
+      "title": "Q2 FY27 Results",
+      "summary": "AUM +27% YoY; PAT +18% YoY. Credit costs tick up; NIM stable. In line.",
+      "results": {
+        "quarters": [
+          "Q2 FY26",
+          "Q1 FY27",
+          "Q2 FY27"
+        ],
+        "rows": [
+          {
+            "metric": "Total income",
+            "values": [
+              14200,
+              16050,
+              16880
+            ]
+          },
+          {
+            "metric": "Net interest income",
+            "values": [
+              9180,
+              10380,
+              10920
+            ]
+          },
+          {
+            "metric": "PBT",
+            "values": [
+              5460,
+              6180,
+              6440
+            ]
+          },
+          {
+            "metric": "PAT",
+            "values": [
+              4040,
+              4570,
+              4760
+            ]
+          }
+        ],
+        "source": {
+          "kind": "sample",
+          "label": "Illustrative sample data",
+          "would_be": "Screener.in quarterly table, reconciled to the results filing"
+        },
+        "reconciliation": {
+          "status": "unverified",
+          "reason": "sample data — no filing to reconcile against"
+        },
+        "basis": "lender"
+      },
+      "detail": "Lender: read on net interest income, AUM growth, NIM and credit costs — not EBITDA, which is meaningless for a balance-sheet business. Credit cost guided 2.0–2.1% for FY27. No surprises."
+    },
+    {
+      "id": "a12",
+      "ticker": "ITC",
+      "name": "ITC",
+      "category": "dividend",
+      "priority": "low",
+      "time": "2026-10-31T16:00:00+05:30",
+      "title": "Interim dividend of ₹6.50 per share declared; record date 14 Nov",
+      "summary": "Interim dividend ₹6.50/sh, record date 14 Nov. In line with policy.",
+      "detail": "High payout continues. Dividend yield ~2.9% annualised. Routine; low priority."
+    },
+    {
+      "id": "a13",
+      "ticker": "POLYCAB",
+      "name": "Polycab India",
+      "category": "earnings_call",
+      "priority": "low",
+      "time": "2026-10-31T10:00:00+05:30",
+      "title": "Notice of earnings conference call — 5 Nov, 4:00 PM IST",
+      "summary": "Q2 concall scheduled 5 Nov. Transcript will feed Pull analysis when live.",
+      "detail": "Calendar item. FINN will auto-ingest the transcript post-call for the research view."
+    },
+    {
+      "id": "a14",
+      "ticker": "DMART",
+      "name": "Avenue Supermarts",
+      "category": "press_release",
+      "priority": "medium",
+      "time": "2026-10-31T09:40:00+05:30",
+      "title": "Standalone revenue update for Q2 — 24 new stores added",
+      "summary": "Revenue +17% YoY on store adds; SSSG ~8%. Footprint now 415 stores.",
+      "detail": "Pre-results business update. Density of store adds strong; margin detail awaits full results."
+    },
+    {
+      "id": "a15",
+      "ticker": "INFY",
+      "name": "Infosys",
+      "category": "results",
+      "priority": "high",
+      "time": "2026-10-30T18:30:00+05:30",
+      "title": "Q2 FY27 Results + FY27 revenue guidance revision",
+      "summary": "Revenue +4.1% YoY CC; PAT +7% YoY. FY27 CC growth guidance RAISED to 3.5–4.5%.",
+      "results": {
+        "quarters": [
+          "Q2 FY26",
+          "Q1 FY27",
+          "Q2 FY27"
+        ],
+        "rows": [
+          {
+            "metric": "Revenue",
+            "values": [
+              40986,
+              42280,
+              42910
+            ]
+          },
+          {
+            "metric": "EBITDA",
+            "values": [
+              9430,
+              9760,
+              9980
+            ]
+          },
+          {
+            "metric": "PBT",
+            "values": [
+              8510,
+              8820,
+              9010
+            ]
+          },
+          {
+            "metric": "PAT",
+            "values": [
+              6506,
+              6720,
+              6960
+            ]
+          }
+        ],
+        "ebitda_margin": [
+          23.0,
+          23.1,
+          23.3
+        ],
+        "source": {
+          "kind": "sample",
+          "label": "Illustrative sample data",
+          "would_be": "Screener.in quarterly table, reconciled to the results filing"
+        },
+        "reconciliation": {
+          "status": "unverified",
+          "reason": "sample data — no filing to reconcile against"
+        },
+        "basis": "operating"
+      },
+      "detail": "Guidance raise is the signal here (prior 2.0–3.0% CC). Large-deal TCV $2.9bn. Margin +20bps QoQ."
+    },
+    {
+      "id": "a16",
+      "ticker": "POWERGRID",
+      "name": "Power Grid Corp",
+      "category": "bonus_split",
+      "priority": "low",
+      "time": "2026-10-30T15:20:00+05:30",
+      "title": "Board to consider bonus issue on 8 Nov",
+      "summary": "Bonus issue under consideration (8 Nov board). Share count event, no cash.",
+      "detail": "Intimation only. Ratio not yet announced."
+    },
+    {
+      "id": "a17",
+      "ticker": "TITAN",
+      "name": "Titan Company",
+      "category": "press_release",
+      "priority": "medium",
+      "time": "2026-10-30T12:00:00+05:30",
+      "title": "Festive-quarter jewellery sales update",
+      "summary": "Jewellery division +19% YoY in festive period; buyer growth double-digit.",
+      "detail": "Strong Diwali demand; studded ratio improving (margin-positive). Full results later this month."
+    },
+    {
+      "id": "a18",
+      "ticker": "VBL",
+      "name": "Varun Beverages",
+      "category": "M&A",
+      "priority": "medium",
+      "time": "2026-10-30T11:15:00+05:30",
+      "title": "Acquires distribution rights for new territory (South Africa adjacency)",
+      "summary": "Expands Africa footprint; small bolt-on, long-runway optionality.",
+      "detail": "Immaterial to FY27 numbers but strategically consistent with international expansion thesis."
+    },
+    {
+      "id": "a19",
+      "ticker": "ITC",
+      "name": "ITC",
+      "category": "unclassified",
+      "priority": "routine",
+      "time": "2026-10-30T10:05:00+05:30",
+      "title": "Compliance certificate under Reg 7(3) — RTA",
+      "summary": "Routine compliance filing. No investor action.",
+      "detail": "Hidden by default in the digest (routine bucket)."
+    },
+    {
+      "id": "a20",
+      "ticker": "TCS",
+      "name": "Tata Consultancy Services",
+      "category": "insider_trading",
+      "priority": "routine",
+      "time": "2026-10-30T09:30:00+05:30",
+      "title": "SAST disclosure — negligible promoter transfer (inter-se)",
+      "summary": "Inter-se promoter transfer, no open-market impact.",
+      "detail": "Routine; collapsed by default."
+    },
+    {
+      "id": "a21",
+      "ticker": "POWERGRID",
+      "name": "Power Grid Corp",
+      "category": "unclassified",
+      "priority": "routine",
+      "time": "2026-10-29T17:00:00+05:30",
+      "title": "ESG report FY26 made available on website",
+      "summary": "Routine ESG disclosure.",
+      "detail": "Low relevance; hidden by default."
+    },
+    {
+      "id": "a22",
+      "ticker": "HDFCBANK",
+      "name": "HDFC Bank",
+      "category": "agm_egm",
+      "priority": "low",
+      "time": "2026-10-29T16:20:00+05:30",
+      "title": "Postal-ballot results — all resolutions passed",
+      "summary": "All resolutions passed, including reappointment of directors.",
+      "detail": "Governance housekeeping; low priority."
+    },
+    {
+      "id": "a23",
+      "ticker": "KPITTECH",
+      "name": "KPIT Technologies",
+      "category": "results",
+      "priority": "high",
+      "time": "2026-10-29T18:00:00+05:30",
+      "title": "Q2 FY27 Results",
+      "summary": "Revenue +19% YoY CC; EBITDA margin 21.2%. Strong order intake; auto-software cycle intact.",
+      "results": {
+        "quarters": [
+          "Q2 FY26",
+          "Q1 FY27",
+          "Q2 FY27"
+        ],
+        "rows": [
+          {
+            "metric": "Revenue",
+            "values": [
+              1428,
+              1602,
+              1685
+            ]
+          },
+          {
+            "metric": "EBITDA",
+            "values": [
+              290,
+              336,
+              357
+            ]
+          },
+          {
+            "metric": "PBT",
+            "values": [
+              232,
+              268,
+              286
+            ]
+          },
+          {
+            "metric": "PAT",
+            "values": [
+              178,
+              205,
+              219
+            ]
+          }
+        ],
+        "ebitda_margin": [
+          20.3,
+          20.98,
+          21.19
+        ],
+        "source": {
+          "kind": "sample",
+          "label": "Illustrative sample data",
+          "would_be": "Screener.in quarterly table, reconciled to the results filing"
+        },
+        "reconciliation": {
+          "status": "unverified",
+          "reason": "sample data — no filing to reconcile against"
+        },
+        "basis": "operating"
+      },
+      "detail": "Ad-hoc universe company (not in portfolio) — shown to demo generalised results parsing."
+    },
+    {
+      "id": "a24",
+      "ticker": "ADANIPORTS",
+      "name": "Adani Ports & SEZ",
+      "category": "pledging",
+      "priority": "medium",
+      "time": "2026-10-29T15:00:00+05:30",
+      "title": "Promoter releases pledge on 1.2% of shares",
+      "summary": "Pledge RELEASED on 1.2% — deleveraging signal, risk-reducing.",
+      "detail": "Direction matters: release (not creation) of pledge. Mildly positive governance signal."
+    },
+    {
+      "id": "a25",
+      "ticker": "RELIANCE",
+      "name": "Reliance Industries",
+      "category": "investor_meetings",
+      "priority": "low",
+      "time": "2026-10-29T12:30:00+05:30",
+      "title": "Intimation — participation in global investor conference",
+      "summary": "Management to meet investors at a broker-hosted conference.",
+      "detail": "Calendar/disclosure item; low priority."
+    },
+    {
+      "id": "a26",
+      "ticker": "SUNPHARMA",
+      "name": "Sun Pharmaceutical",
+      "category": "dividend",
+      "priority": "low",
+      "time": "2026-10-28T16:40:00+05:30",
+      "title": "Interim dividend ₹5.00/share; record date 12 Nov",
+      "summary": "Interim dividend ₹5.00/sh declared.",
+      "detail": "Routine capital return."
+    }
+  ],
+  "research": {
+    "DIXON": {
+      "ticker": "DIXON",
+      "name": "Dixon Technologies (India) Ltd",
+      "sector": "EMS / Electronics Manufacturing",
+      "as_of": "Q2 FY27 (quarter ended Sep 2026)",
+      "sources": [
+        {
+          "kind": "annual_report",
+          "label": "Annual Report FY26 (sample)"
+        },
+        {
+          "kind": "concall_transcript",
+          "label": "Q2 FY27 concall transcript (sample)"
+        },
+        {
+          "kind": "concall_transcript",
+          "label": "Q1 FY27 concall transcript (sample)"
+        },
+        {
+          "kind": "concall_transcript",
+          "label": "Q4 FY26 concall transcript (sample)"
+        },
+        {
+          "kind": "concall_transcript",
+          "label": "Q3 FY26 concall transcript (sample)"
+        },
+        {
+          "kind": "screener_table",
+          "label": "Standardised quarterly tables (sample)"
+        }
+      ],
+      "grounding_note": "Illustrative sample. In live mode, quotes come from the company's own concall transcripts and annual report; figures come from Screener.in's standardised tables, labelled as a secondary source and reconciled to results filings where available.",
+      "business_snapshot": {
+        "what": "India's largest electronics manufacturing services (EMS) company — designs and builds products for global and domestic brands (ODM/OEM).",
+        "segments": [
+          {
+            "name": "Mobile & EMS",
+            "rev_share": 72,
+            "note": "Smartphones + feature phones; the growth engine. Key anchor customers under PLI."
+          },
+          {
+            "name": "Consumer Electronics (TVs)",
+            "rev_share": 12,
+            "note": "LED TVs for large brands; mature, lower-margin."
+          },
+          {
+            "name": "Home Appliances",
+            "rev_share": 8,
+            "note": "Washing machines; ODM mix rising."
+          },
+          {
+            "name": "Lighting",
+            "rev_share": 5,
+            "note": "LED bulbs/battens; the original business, now small."
+          },
+          {
+            "name": "Others (Wearables, Telecom, Display)",
+            "rev_share": 3,
+            "note": "Display fab is the new optionality."
+          }
+        ],
+        "model": "Thin-margin, high-asset-turn. Value accrues via scale, backward integration (components, display) and ODM share gains."
+      },
+      "financial_snapshot": {
+        "metrics": [
+          {
+            "k": "Revenue (Q2 FY27)",
+            "v": "₹14,290 cr",
+            "sub": "+38% YoY",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "EBITDA margin",
+            "v": "4.42%",
+            "sub": "+0.37 pp QoQ",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "PAT (Q2 FY27)",
+            "v": "₹341 cr",
+            "sub": "+61% YoY",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "ROCE (FY26)",
+            "v": "28.4%",
+            "sub": "high asset turn",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "Net debt/EBITDA",
+            "v": "0.3x",
+            "sub": "lightly levered",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "CFO ÷ EBITDA (FY26)",
+            "v": "0.71",
+            "sub": "CFO/EBITDA",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          }
+        ]
+      },
+      "trajectory": {
+        "series_label": "Revenue (₹ cr) & EBITDA margin (%)",
+        "quarters": [
+          "Q3 FY25",
+          "Q4 FY25",
+          "Q1 FY26",
+          "Q2 FY26",
+          "Q3 FY26",
+          "Q4 FY26",
+          "Q1 FY27",
+          "Q2 FY27"
+        ],
+        "revenue": [
+          7200,
+          8100,
+          8650,
+          9340,
+          10850,
+          11980,
+          12760,
+          14290
+        ],
+        "pat": [
+          150,
+          170,
+          190,
+          212,
+          238,
+          271,
+          289,
+          341
+        ],
+        "read": "Revenue compounding ~10% QoQ for four quarters while margin grinds up ~30bps — operating leverage plus mix shift to ODM/display. The margin line is the thing to watch: EMS bulls are paying for the slope, not the level.",
+        "margin": [
+          3.95,
+          4.0,
+          4.02,
+          4.05,
+          4.1,
+          4.18,
+          4.23,
+          4.42
+        ],
+        "margin_label": "EBITDA margin"
+      },
+      "balance_sheet": {
+        "points": [
+          {
+            "k": "Debt/Equity",
+            "v": "0.34",
+            "read": "Modest; capex largely internally funded + PLI.",
+            "source": {
+              "kind": "annual_report",
+              "label": "Annual report (sample)"
+            }
+          },
+          {
+            "k": "Working-capital days",
+            "v": "18 days",
+            "read": "Negative-to-low WC is the EMS superpower — suppliers + advances fund growth.",
+            "source": {
+              "kind": "annual_report",
+              "label": "Annual report (sample)"
+            }
+          },
+          {
+            "k": "Contingent liabilities",
+            "v": "₹610 cr",
+            "read": "Mostly customs/duty disputes; ~9% of net worth — monitor, not alarming.",
+            "source": {
+              "kind": "annual_report",
+              "label": "Annual report (sample)"
+            }
+          },
+          {
+            "k": "Capex FY27E",
+            "v": "₹1,900 cr",
+            "read": "Display fab + component backward-integration. The leverage risk lives here if ramp slips.",
+            "source": {
+              "kind": "annual_report",
+              "label": "Annual report (sample)"
+            }
+          }
+        ]
+      },
+      "cash_quality": {
+        "cfo_ebitda": [
+          0.55,
+          0.63,
+          0.68,
+          0.71
+        ],
+        "quarters": [
+          "FY23",
+          "FY24",
+          "FY25",
+          "FY26"
+        ],
+        "read": "Cash conversion improving as scale normalises working capital. Still below 1.0 — profits are real but growth consumes cash, so FCF is thin while in capex phase. Not a red flag; a growth-stage signature.",
+        "applicable": true
+      },
+      "bull_bear": {
+        "bull": [
+          "ODM + backward integration structurally lifts a 4% margin toward 5–6% over time — small bps moves are large on this base.",
+          "Display fab is a call option the market is only starting to price; pulled forward vs guidance.",
+          "Negative working capital means growth is self-funding — rare in a capex-heavy story."
+        ],
+        "bear": [
+          "Still a ~4% EBITDA-margin assembler; customer concentration and pricing power are real constraints.",
+          "Valuation discounts years of flawless execution — any display-ramp slip re-rates it hard.",
+          "Capex intensity (₹1,900 cr) could pressure the clean balance sheet if volumes disappoint."
+        ]
+      },
+      "profile": "operating",
+      "sample": true,
+      "series": {
+        "periods": [
+          "Q3 FY25",
+          "Q4 FY25",
+          "Q1 FY26",
+          "Q2 FY26",
+          "Q3 FY26",
+          "Q4 FY26",
+          "Q1 FY27",
+          "Q2 FY27"
+        ],
+        "revenue": [
+          7200,
+          8100,
+          8650,
+          9340,
+          10850,
+          11980,
+          12760,
+          14290
+        ],
+        "ebitda": [
+          284,
+          324,
+          348,
+          378,
+          445,
+          501,
+          540,
+          632
+        ],
+        "pat": [
+          150,
+          170,
+          190,
+          212,
+          238,
+          271,
+          289,
+          341
+        ],
+        "source": {
+          "kind": "sample",
+          "label": "Illustrative sample data",
+          "would_be": "Screener.in quarterly table"
+        }
+      },
+      "commitments": [
+        {
+          "said_in": "Q3 FY26",
+          "metric": "revenue",
+          "direction": "at_least",
+          "target_low": 11500,
+          "target_high": null,
+          "horizon": "Q4 FY26",
+          "quote": "We expect Q4 revenue to comfortably exceed 11,500 crore.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q3 FY26 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q3 FY26",
+          "metric": "ebitda_margin",
+          "direction": "at_least",
+          "target_low": 4.3,
+          "target_high": null,
+          "horizon": "FY27 exit",
+          "quote": "Margins should inch towards 4.3% by the exit of FY27.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q3 FY26 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q4 FY26",
+          "metric": "pat_growth_yoy",
+          "direction": "at_least",
+          "target_low": 40,
+          "target_high": null,
+          "horizon": "Q1 FY27",
+          "quote": "We are confident of 40%-plus PAT growth in the first quarter.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q4 FY26 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q4 FY26",
+          "metric": "other",
+          "direction": "at_least",
+          "target_low": null,
+          "target_high": null,
+          "horizon": "H2 FY27",
+          "quote": "The display JV should start contributing from H2 FY27; we are not baking in any revenue in H1.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q4 FY26 earnings-call transcript (sample)"
+          },
+          "note": "qualitative milestone that needs segment disclosure; flagged for analyst review",
+          "label": "Display JV contribution"
+        },
+        {
+          "said_in": "Q1 FY27",
+          "metric": "revenue",
+          "direction": "at_least",
+          "target_low": 55000,
+          "target_high": null,
+          "horizon": "FY27",
+          "quote": "For FY27 we expect revenue to cross 55,000 crore.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q1 FY27 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q1 FY27",
+          "metric": "ebitda_margin",
+          "direction": "range",
+          "target_low": 4.3,
+          "target_high": 4.5,
+          "horizon": "FY27",
+          "quote": "We are guiding to an EBITDA margin band of 4.3 to 4.5% for the year.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q1 FY27 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q2 FY27",
+          "metric": "ebitda_margin",
+          "direction": "increase",
+          "target_low": null,
+          "target_high": null,
+          "horizon": "next quarter",
+          "quote": "With a full quarter of display, Q3 should see a further margin step-up.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q2 FY27 earnings-call transcript (sample)"
+          }
+        }
+      ],
+      "ledger_read": "Every commitment that has reached its evaluation date was met or beaten. The larger FY27 calls are still open: H1 revenue annualises just under the ₹55,000 cr marker, while year-to-date margin sits inside the guided band."
+    },
+    "ASIANPAINT": {
+      "ticker": "ASIANPAINT",
+      "name": "Asian Paints Ltd",
+      "sector": "Consumer / Decorative Paints",
+      "as_of": "Q2 FY27 (quarter ended Sep 2026)",
+      "sources": [
+        {
+          "kind": "annual_report",
+          "label": "Annual Report FY26 (sample)"
+        },
+        {
+          "kind": "concall_transcript",
+          "label": "Q2 FY27 concall transcript (sample)"
+        },
+        {
+          "kind": "concall_transcript",
+          "label": "Q1 FY27 concall transcript (sample)"
+        },
+        {
+          "kind": "screener_table",
+          "label": "Standardised quarterly tables (sample)"
+        }
+      ],
+      "grounding_note": "Illustrative sample. In live mode, quotes come from the company's own concall transcripts and annual report; figures come from Screener.in's standardised tables, labelled as a secondary source and reconciled to results filings where available.",
+      "business_snapshot": {
+        "what": "India's largest paints company; decorative paints dominate, with a growing home-décor and industrial (via JVs) adjacency.",
+        "segments": [
+          {
+            "name": "Decorative (India)",
+            "rev_share": 82,
+            "note": "Core; volume + mix driven. Under new competitive pressure."
+          },
+          {
+            "name": "Industrial & Auto (JVs)",
+            "rev_share": 9,
+            "note": "PPG JVs; steadier margins."
+          },
+          {
+            "name": "International",
+            "rev_share": 6,
+            "note": "Asia/Africa; currency-exposed."
+          },
+          {
+            "name": "Home Décor / Bath & Kitchen",
+            "rev_share": 3,
+            "note": "Strategic adjacency, still sub-scale."
+          }
+        ],
+        "model": "Brand + distribution moat (>150k dealers, tinting machines). Pricing power historically strong — now being tested."
+      },
+      "financial_snapshot": {
+        "metrics": [
+          {
+            "k": "Revenue (Q2 FY27)",
+            "v": "₹8,205 cr",
+            "sub": "-3% YoY",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "EBITDA margin",
+            "v": "15.97%",
+            "sub": "-2.82 pp YoY",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "PAT (Q2 FY27)",
+            "v": "₹878 cr",
+            "sub": "-14% YoY",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "ROCE (FY26)",
+            "v": "27.1%",
+            "sub": "still high",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "Net cash",
+            "v": "net cash",
+            "sub": "debt-free",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "CFO ÷ EBITDA (FY26)",
+            "v": "0.95",
+            "sub": "excellent",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          }
+        ]
+      },
+      "trajectory": {
+        "series_label": "Revenue (₹ cr) & EBITDA margin (%)",
+        "quarters": [
+          "Q3 FY25",
+          "Q4 FY25",
+          "Q1 FY26",
+          "Q2 FY26",
+          "Q3 FY26",
+          "Q4 FY26",
+          "Q1 FY27",
+          "Q2 FY27"
+        ],
+        "revenue": [
+          8550,
+          8380,
+          8930,
+          8460,
+          8820,
+          8640,
+          8990,
+          8205
+        ],
+        "pat": [
+          1180,
+          1110,
+          1170,
+          1020,
+          1130,
+          1005,
+          965,
+          878
+        ],
+        "read": "The classic 'narrative vs numbers' setup: a franchise with pristine returns whose margin line has fallen four quarters running as new entrants discount. The level (16%) is still good; the slope is the worry.",
+        "margin": [
+          19.6,
+          19.2,
+          19.4,
+          18.79,
+          18.5,
+          17.8,
+          16.91,
+          15.97
+        ],
+        "margin_label": "EBITDA margin"
+      },
+      "balance_sheet": {
+        "points": [
+          {
+            "k": "Debt/Equity",
+            "v": "~0.0 (net cash)",
+            "read": "Fortress balance sheet — can out-spend competitors on A&P and capacity.",
+            "source": {
+              "kind": "annual_report",
+              "label": "Annual report (sample)"
+            }
+          },
+          {
+            "k": "Working-capital days",
+            "v": "24 days",
+            "read": "Tight; dealer-funded distribution.",
+            "source": {
+              "kind": "annual_report",
+              "label": "Annual report (sample)"
+            }
+          },
+          {
+            "k": "Contingent liabilities",
+            "v": "₹540 cr",
+            "read": "Routine tax matters.",
+            "source": {
+              "kind": "annual_report",
+              "label": "Annual report (sample)"
+            }
+          },
+          {
+            "k": "Capex",
+            "v": "₹1,100 cr",
+            "read": "New capacity amid a demand-soft patch — defending share.",
+            "source": {
+              "kind": "annual_report",
+              "label": "Annual report (sample)"
+            }
+          }
+        ]
+      },
+      "cash_quality": {
+        "cfo_ebitda": [
+          0.98,
+          0.96,
+          0.95,
+          0.93
+        ],
+        "quarters": [
+          "FY23",
+          "FY24",
+          "FY25",
+          "FY26"
+        ],
+        "read": "Cash conversion remains excellent (~0.93) even as margins slip — profits are high quality and real. The problem is the P&L, not the cash flow.",
+        "applicable": true
+      },
+      "bull_bear": {
+        "bull": [
+          "Best-in-class returns and a net-cash balance sheet — it can simply outlast new entrants.",
+          "Cash conversion ~0.93 proves earnings quality is intact; this is a margin dip, not a business break.",
+          "If pricing normalises, the operating leverage snaps margin back fast off the current trough."
+        ],
+        "bear": [
+          "Three consecutive guidance misses on margin — management's forward credibility is impaired.",
+          "Competitive intensity looks structural, not 'transient' as framed — a permanent re-rate of the moat.",
+          "Premium valuation still embeds pricing power that the numbers are actively questioning."
+        ]
+      },
+      "profile": "operating",
+      "sample": true,
+      "series": {
+        "periods": [
+          "Q3 FY25",
+          "Q4 FY25",
+          "Q1 FY26",
+          "Q2 FY26",
+          "Q3 FY26",
+          "Q4 FY26",
+          "Q1 FY27",
+          "Q2 FY27"
+        ],
+        "revenue": [
+          8550,
+          8380,
+          8930,
+          8460,
+          8820,
+          8640,
+          8990,
+          8205
+        ],
+        "ebitda": [
+          1676,
+          1609,
+          1732,
+          1590,
+          1632,
+          1538,
+          1520,
+          1310
+        ],
+        "pat": [
+          1180,
+          1110,
+          1170,
+          1020,
+          1130,
+          1005,
+          965,
+          878
+        ],
+        "source": {
+          "kind": "sample",
+          "label": "Illustrative sample data",
+          "would_be": "Screener.in quarterly table"
+        }
+      },
+      "commitments": [
+        {
+          "said_in": "Q3 FY26",
+          "metric": "ebitda_margin",
+          "direction": "at_least",
+          "target_low": 18.5,
+          "target_high": null,
+          "horizon": "Q4 FY26",
+          "quote": "We see fourth-quarter margins holding above 18.5%.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q3 FY26 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q3 FY26",
+          "metric": "ebitda_margin",
+          "direction": "range",
+          "target_low": 18,
+          "target_high": 20,
+          "horizon": "FY27",
+          "quote": "We remain comfortable with our 18 to 20% margin band for FY27.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q3 FY26 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q4 FY26",
+          "metric": "ebitda_margin",
+          "direction": "at_least",
+          "target_low": 18,
+          "target_high": null,
+          "horizon": "Q1 FY27",
+          "quote": "Competitive intensity is transient; we expect Q1 margins back above 18%.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q4 FY26 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q1 FY27",
+          "metric": "revenue_growth_yoy",
+          "direction": "at_least",
+          "target_low": 5,
+          "target_high": null,
+          "horizon": "Q2 FY27",
+          "quote": "The festive quarter will be volume-led and we expect at least 5% revenue growth.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q1 FY27 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q2 FY27",
+          "metric": "ebitda_margin",
+          "direction": "range",
+          "target_low": 16.5,
+          "target_high": 17.5,
+          "horizon": "FY27 exit",
+          "quote": "We expect margins to recover to around 17% by the exit of FY27.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q2 FY27 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q2 FY27",
+          "metric": "other",
+          "direction": "at_least",
+          "target_low": null,
+          "target_high": null,
+          "horizon": "FY27",
+          "quote": "We will return to double-digit volume growth.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q2 FY27 earnings-call transcript (sample)"
+          },
+          "note": "volume growth is not disclosed in the standard financial tables",
+          "label": "Volume growth"
+        }
+      ],
+      "ledger_read": "All three commitments that have come due were missed, each on margin or growth recovery. The FY27 band and exit-margin calls remain open, but year-to-date margin is already below both."
+    },
+    "INFY": {
+      "ticker": "INFY",
+      "name": "Infosys Ltd",
+      "sector": "IT Services",
+      "as_of": "Q2 FY27 (quarter ended Sep 2026)",
+      "sources": [
+        {
+          "kind": "annual_report",
+          "label": "Annual Report FY26 (sample)"
+        },
+        {
+          "kind": "concall_transcript",
+          "label": "Q2 FY27 concall transcript (sample)"
+        },
+        {
+          "kind": "concall_transcript",
+          "label": "Q1 FY27 concall transcript (sample)"
+        },
+        {
+          "kind": "screener_table",
+          "label": "Standardised quarterly tables (sample)"
+        }
+      ],
+      "grounding_note": "Illustrative sample. In live mode, quotes come from the company's own concall transcripts and annual report; figures come from Screener.in's standardised tables, labelled as a secondary source and reconciled to results filings where available.",
+      "business_snapshot": {
+        "what": "Global IT services and consulting; large-deal and digital/AI transformation led.",
+        "segments": [
+          {
+            "name": "Financial Services",
+            "rev_share": 29,
+            "note": "Largest vertical; deal-sensitive."
+          },
+          {
+            "name": "Retail & CPG",
+            "rev_share": 15,
+            "note": "Discretionary-spend exposed."
+          },
+          {
+            "name": "Comms/Energy/Utilities",
+            "rev_share": 13,
+            "note": "Steady."
+          },
+          {
+            "name": "Manufacturing",
+            "rev_share": 15,
+            "note": "Fastest-growing vertical."
+          },
+          {
+            "name": "Hi-Tech / Life Sciences / Other",
+            "rev_share": 28,
+            "note": "Mixed."
+          }
+        ],
+        "model": "People + platforms; margin is a function of utilisation, pricing and onsite mix. AI is both a tailwind (deals) and a deflation risk (pricing)."
+      },
+      "financial_snapshot": {
+        "metrics": [
+          {
+            "k": "Revenue (Q2 FY27)",
+            "v": "₹42,910 cr",
+            "sub": "+4.1% YoY CC",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "EBITDA margin",
+            "v": "23.3%",
+            "sub": "+0.20 pp QoQ",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "PAT (Q2 FY27)",
+            "v": "₹6,960 cr",
+            "sub": "+7% YoY",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "Large-deal TCV",
+            "v": "$2.9bn",
+            "sub": "healthy",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "Net cash",
+            "v": "net cash",
+            "sub": "high payout",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          },
+          {
+            "k": "CFO ÷ EBITDA (FY26)",
+            "v": "1.02",
+            "sub": "FCF > PAT",
+            "source": {
+              "kind": "screener_table",
+              "label": "Standardised tables (sample)"
+            }
+          }
+        ]
+      },
+      "trajectory": {
+        "series_label": "Revenue (₹ cr) & EBITDA margin (%)",
+        "quarters": [
+          "Q3 FY25",
+          "Q4 FY25",
+          "Q1 FY26",
+          "Q2 FY26",
+          "Q3 FY26",
+          "Q4 FY26",
+          "Q1 FY27",
+          "Q2 FY27"
+        ],
+        "revenue": [
+          39500,
+          40100,
+          40300,
+          40986,
+          41200,
+          41650,
+          42280,
+          42910
+        ],
+        "pat": [
+          6310,
+          6420,
+          6368,
+          6506,
+          6580,
+          6630,
+          6720,
+          6960
+        ],
+        "read": "Low-single-digit revenue grind with a steadily rising margin — a cost-discipline story more than a growth story right now. The guidance raise this quarter is what changes the read.",
+        "margin": [
+          22.4,
+          22.6,
+          22.7,
+          23.0,
+          22.8,
+          22.9,
+          23.1,
+          23.3
+        ],
+        "margin_label": "EBITDA margin"
+      },
+      "balance_sheet": {
+        "points": [
+          {
+            "k": "Debt/Equity",
+            "v": "~0.0 (net cash)",
+            "read": "Capital returned via buybacks + dividends.",
+            "source": {
+              "kind": "annual_report",
+              "label": "Annual report (sample)"
+            }
+          },
+          {
+            "k": "DSO",
+            "v": "72 days",
+            "read": "Stable receivables; no collection stress.",
+            "source": {
+              "kind": "annual_report",
+              "label": "Annual report (sample)"
+            }
+          },
+          {
+            "k": "Contingent liabilities",
+            "v": "₹3,200 cr",
+            "read": "Mostly tax disputes; well-covered.",
+            "source": {
+              "kind": "annual_report",
+              "label": "Annual report (sample)"
+            }
+          },
+          {
+            "k": "Capex",
+            "v": "low",
+            "read": "Asset-light; cash compounds.",
+            "source": {
+              "kind": "annual_report",
+              "label": "Annual report (sample)"
+            }
+          }
+        ]
+      },
+      "cash_quality": {
+        "cfo_ebitda": [
+          0.99,
+          1.0,
+          1.01,
+          1.02
+        ],
+        "quarters": [
+          "FY23",
+          "FY24",
+          "FY25",
+          "FY26"
+        ],
+        "read": "Textbook cash quality — FCF slightly exceeds PAT. Earnings are as real as it gets; the debate is growth, never accounting.",
+        "applicable": true
+      },
+      "bull_bear": {
+        "bull": [
+          "Guidance raise signals genuine demand inflection, not just cost control.",
+          "Net-cash, >1.0 cash conversion, ≥85% FCF returned — a compounder's cash profile.",
+          "Margin discipline proven across a soft demand year."
+        ],
+        "bear": [
+          "Still low-single-digit CC growth — AI-led pricing deflation is a real medium-term overhang.",
+          "FS concentration leaves it cyclically exposed.",
+          "Valuation prices a recovery that the guidance only just started to confirm."
+        ]
+      },
+      "profile": "operating",
+      "sample": true,
+      "series": {
+        "periods": [
+          "Q3 FY25",
+          "Q4 FY25",
+          "Q1 FY26",
+          "Q2 FY26",
+          "Q3 FY26",
+          "Q4 FY26",
+          "Q1 FY27",
+          "Q2 FY27"
+        ],
+        "revenue": [
+          39500,
+          40100,
+          40300,
+          40986,
+          41200,
+          41650,
+          42280,
+          42910
+        ],
+        "ebitda": [
+          8848,
+          9063,
+          9148,
+          9427,
+          9394,
+          9538,
+          9767,
+          9998
+        ],
+        "pat": [
+          6310,
+          6420,
+          6368,
+          6506,
+          6580,
+          6630,
+          6720,
+          6960
+        ],
+        "source": {
+          "kind": "sample",
+          "label": "Illustrative sample data",
+          "would_be": "Screener.in quarterly table"
+        },
+        "ebit": [
+          7742,
+          7940,
+          8020,
+          8279,
+          8240,
+          8372,
+          8583,
+          8797
+        ]
+      },
+      "commitments": [
+        {
+          "said_in": "Q3 FY26",
+          "metric": "ebit_margin",
+          "direction": "at_least",
+          "target_low": 20,
+          "target_high": null,
+          "horizon": "Q4 FY26",
+          "quote": "We expect Q4 operating margin to stay at or above 20%.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q3 FY26 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q4 FY26",
+          "metric": "other",
+          "direction": "range",
+          "target_low": 1,
+          "target_high": 3,
+          "horizon": "FY27",
+          "quote": "Our FY27 revenue growth guidance is 1 to 3% in constant currency.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q4 FY26 earnings-call transcript (sample)"
+          },
+          "note": "constant-currency growth can't be derived from INR-reported figures (target shown in %)",
+          "label": "Constant-currency revenue growth"
+        },
+        {
+          "said_in": "Q4 FY26",
+          "metric": "ebit_margin",
+          "direction": "range",
+          "target_low": 20,
+          "target_high": 22,
+          "horizon": "FY27",
+          "quote": "Operating margin guidance for FY27 is 20 to 22%.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q4 FY26 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q1 FY27",
+          "metric": "revenue_growth_yoy",
+          "direction": "at_least",
+          "target_low": 3,
+          "target_high": null,
+          "horizon": "Q2 FY27",
+          "quote": "We expect second-quarter revenue to grow at least 3% year on year.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q1 FY27 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q1 FY27",
+          "metric": "pat_growth_yoy",
+          "direction": "at_least",
+          "target_low": 5,
+          "target_high": null,
+          "horizon": "H1 FY27",
+          "quote": "We expect first-half profit growth of at least 5%.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q1 FY27 earnings-call transcript (sample)"
+          }
+        },
+        {
+          "said_in": "Q2 FY27",
+          "metric": "other",
+          "direction": "range",
+          "target_low": 3.5,
+          "target_high": 4.5,
+          "horizon": "FY27",
+          "quote": "We are raising FY27 constant-currency growth guidance to 3.5 to 4.5%.",
+          "quote_verified": null,
+          "source": {
+            "kind": "concall_transcript",
+            "label": "Q2 FY27 earnings-call transcript (sample)"
+          },
+          "note": "constant-currency growth can't be derived from INR-reported figures (target shown in %)",
+          "label": "Constant-currency revenue growth"
+        }
+      ],
+      "ledger_read": "Conservative targets, consistently met or beaten, and the FY27 operating-margin band is on track year to date. The constant-currency growth guidance (now raised) can't be checked from INR-reported tables, so it is shown unscored."
+    }
+  }
+}
